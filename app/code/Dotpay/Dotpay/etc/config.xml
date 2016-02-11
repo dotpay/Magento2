@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Dotpay default configuration
+*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <dotpay_dotpay>
+                <active>0</active>
+                <model>Dotpay\Dotpay\Model\Payment</model>
+                <payment_action>authorize_capture</payment_action>
+                <title>Dotpay</title>
+                <redirect_url>https://ssl.dotpay.pl/</redirect_url>
+                <redirect_url_test>https://ssl.dotpay.pl/test_payment/</redirect_url_test>
+                <authorized_ips>
+                    <ip1>195.150.9.37</ip1>
+                </authorized_ips>
+            </dotpay_dotpay>
+        </payment>
+    </default>
+</config>
