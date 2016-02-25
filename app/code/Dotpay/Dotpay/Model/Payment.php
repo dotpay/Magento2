@@ -18,7 +18,17 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_minAmount = null;
     protected $_maxAmount = null;
     
-    protected $_supportedCurrencyCodes = array('PLN');
+    
+    protected $_supportedCurrencyCodes = array(
+        'PLN'
+        , 'EUR'
+        , 'USD'
+        , 'GBP'
+        , 'JPY'
+        , 'CZK'
+        , 'SEK'
+        , 'DKK'
+    );
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
