@@ -89,9 +89,10 @@ class Response extends Dotpay {
     public function execute() {
         $this->checkRemoteIP();
         $this->getPostParams();
-        $this->checkSignature();
-
+        
         $order = $this->getOrder($this->fields['control']);
+        
+        $this->checkSignature($order);
 
         $lastStatus = $order->getStatus();
         if (\Magento\Sales\Model\Order::STATE_COMPLETE === $lastStatus || \Magento\Sales\Model\Order::STATE_CANCELED === $lastStatus) {
@@ -125,16 +126,12 @@ class Response extends Dotpay {
             die('FAIL');
         }
 
-        if (sprintf("%01.2f", round($order->getGrandTotal(), 2)) !== $this->fields['operation_amount']) {
-            die('FAIL');
-        }
-
         return $order;
     }
 
-    protected function checkSignature() {
+    protected function checkSignature($order) {
         $hashDotpay = $this->fields['signature'];
-        $hashCalculate = $this->calculateSignature();
+        $hashCalculate = $this->calculateSignature($order);
 
         if ($hashDotpay !== $hashCalculate) {
             die('FAIL');
@@ -161,16 +158,30 @@ class Response extends Dotpay {
         }
     }
 
-    protected function calculateSignature() {
+    protected function calculateSignature($order) {
         $string = '';
         $string .= $this->_model->getConfigData('pin');
 
         foreach ($this->fields as $k => $v) {
-            if ($k === 'signature') {
-                continue;
+            switch ($k) {
+                case 'signature':
+                    /**
+                     * NOP
+                     */
+                    break;
+                case 'operation_original_amount':
+                    $origAmount = round($order->getGrandTotal(), 2);
+                    $string .= sprintf("%01.2f", $origAmount);
+                    break;
+                case 'operation_original_currency':
+                     $string .= $order->getOrderCurrencyCode();
+                    break;
+                case 'email':
+                     $string .= $order->getBillingAddress()->getEmail();
+                    break;
+                default:
+                    $string .= $v;
             }
-
-            $string .= $v;
         }
 
         return hash('sha256', $string);
