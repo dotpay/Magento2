@@ -43,6 +43,8 @@ class Response extends Dotpay {
         'operation_status' => '',
         'operation_amount' => '',
         'operation_currency' => '',
+        'operation_withdrawal_amount' => '',
+        'operation_commission_amount' => '',
         'operation_original_amount' => '',
         'operation_original_currency' => '',
         'operation_datetime' => '',
@@ -53,6 +55,8 @@ class Response extends Dotpay {
         'p_info' => '',
         'p_email' => '',
         'channel' => '',
+        'channel_country' => '',
+        'geoip_country' => '',
         'signature' => ''
     );
 
