@@ -36,7 +36,7 @@ class Redirect extends Dotpay {
         
 
         $form = <<<END
-<form id="redirectDotpay" action="{$dotAction}" method="GET">
+<form id="redirectDotpay" action="{$dotAction}" method="POST">
     <input type="hidden" name="id" value="{$dotId}" />
     <input type="hidden" name="control" value="{$dotControl}" />
     <input type="hidden" name="p_info" value="{$dotPinfo}" />
