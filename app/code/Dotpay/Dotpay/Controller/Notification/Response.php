@@ -127,7 +127,7 @@ class Response extends Dotpay {
     protected function getOrder($idOrder) {
         $order = $this->_order->get($idOrder);
         if (!$order) {
-            die('FAIL');
+            die('FAIL: order not exist');
         }
 
         return $order;
@@ -138,7 +138,7 @@ class Response extends Dotpay {
         $hashCalculate = $this->calculateSignature($order);
 
         if ($hashDotpay !== $hashCalculate) {
-            die('FAIL');
+            die('FAIL: bad signature');
         }
     }
 
@@ -149,7 +149,7 @@ class Response extends Dotpay {
         $remoteIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
 
         if (!in_array($realIp, $ips) && !in_array($remoteIp, $ips)) {
-            die('FAIL');
+            die('FAIL: access denied');
         }
     }
 
