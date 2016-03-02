@@ -9,6 +9,12 @@ namespace Dotpay\Dotpay\Controller\Notification;
 use Dotpay\Dotpay\Controller\Dotpay;
 
 class Response extends Dotpay {
+    
+    // Check Real IP if server is proxy, balancer...
+    const CHECK_REAL_IP = false;
+    
+    // Local IP address
+    const LOCAL_IP = '127.0.0.1';
 
     const STATUS_NEW = 'new';
     const STATUS_PROCESSING = 'processing';
@@ -94,8 +100,21 @@ class Response extends Dotpay {
         $this->checkRemoteIP();
         $this->getPostParams();
         
+        /**
+         * check order
+         */
         $order = $this->getOrder($this->fields['control']);
         
+        /**
+         * check currency, amount, email
+         */
+        $this->checkCurrency($order);
+        $this->checkAmount($order);
+        $this->checkEmail($order);
+        
+        /**
+         * check signature
+         */
         $this->checkSignature($order);
 
         $lastStatus = $order->getStatus();
@@ -127,7 +146,7 @@ class Response extends Dotpay {
     protected function getOrder($idOrder) {
         $order = $this->_order->get($idOrder);
         if (!$order) {
-            die('FAIL: order not exist');
+            die('FAIL ORDER: not exist');
         }
 
         return $order;
@@ -138,18 +157,26 @@ class Response extends Dotpay {
         $hashCalculate = $this->calculateSignature($order);
 
         if ($hashDotpay !== $hashCalculate) {
-            die('FAIL: bad signature');
+            die('FAIL SIGNATURE');
         }
     }
 
     protected function checkRemoteIP() {
         $ips = $this->_model->getConfigData('authorized_ips');
-
-        $realIp = isset($_SERVER['HTTP_X_REAL_IP']) ? $_SERVER['HTTP_X_REAL_IP'] : '0.0.0.0';
+        
         $remoteIp = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
-
-        if (!in_array($realIp, $ips) && !in_array($remoteIp, $ips)) {
-            die('FAIL: access denied');
+        $realIp = isset($_SERVER['HTTP_X_REAL_IP']) ? $_SERVER['HTTP_X_REAL_IP'] : '0.0.0.0';
+        
+        if (in_array($remoteIp, $ips)) {
+            /**
+             * OK NOP
+             */
+        } elseif (self::CHECK_REAL_IP && in_array($realIp, $ips) && $remoteIp === self::LOCAL_IP) {
+            /**
+             * OK NOP
+             */
+        } else {
+            die('FAIL IP: access denied');
         }
     }
 
@@ -159,6 +186,34 @@ class Response extends Dotpay {
             if ($value !== '') {
                 $v = $value;
             }
+        }
+    }
+    
+    protected function checkCurrency($order) {
+        $currencyOrder = $order->getOrderCurrencyCode();
+        $currencyResponse = $this->fields['operation_original_currency'];
+
+        if ($currencyOrder !== $currencyResponse) {
+            die('FAIL CURRENCY');
+        }
+    }
+    
+    protected function checkAmount($order) {
+        $amount = round($order->getGrandTotal(), 2);
+        $amountOrder = sprintf("%01.2f", $amount);
+        $amountResponse = $this->fields['operation_original_amount'];
+
+        if ($amountOrder !== $amountResponse) {
+            die('FAIL AMOUNT');
+        }
+    }
+    
+    protected function checkEmail($order) {
+        $emailBilling = $order->getBillingAddress()->getEmail();
+        $emailResponse = $this->fields['email'];
+
+        if ($emailBilling !== $emailResponse) {
+            die('FAIL EMAIL');
         }
     }
 
@@ -172,16 +227,6 @@ class Response extends Dotpay {
                     /**
                      * NOP
                      */
-                    break;
-                case 'operation_original_amount':
-                    $origAmount = round($order->getGrandTotal(), 2);
-                    $string .= sprintf("%01.2f", $origAmount);
-                    break;
-                case 'operation_original_currency':
-                     $string .= $order->getOrderCurrencyCode();
-                    break;
-                case 'email':
-                     $string .= $order->getBillingAddress()->getEmail();
                     break;
                 default:
                     $string .= $v;
