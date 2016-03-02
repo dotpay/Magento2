@@ -59,6 +59,9 @@ define(
             },
             afterPlaceOrder: function () {
                 window.location.replace(url.build('dotpay/processing/redirect'));
+            },
+            getPaymentAcceptanceMarkSrc: function() {
+                return url.build('dotpay/processing/redirect');
             }
         });
     }
