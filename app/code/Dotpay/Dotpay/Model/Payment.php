@@ -128,6 +128,6 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
     public function getPaymentMarkImageUrl()
     {
         $baseUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_STATIC);
-        return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/dotpay.png';
+        return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/dotpay.gif';
     }
 }

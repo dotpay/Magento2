@@ -61,7 +61,7 @@ define(
                 window.location.replace(url.build('dotpay/processing/redirect'));
             },
             getPaymentAcceptanceMarkSrc: function() {
-                return url.build('dotpay/processing/redirect');
+                return window.checkoutConfig.payment.dotpay.paymentAcceptanceMarkSrc;
             }
         });
     }

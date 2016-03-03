@@ -7,15 +7,10 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Dotpay\Dotpay\Model\Payment as DotpayConfig;
 
 /**
- * PayPal module observer
+ * Dotpay module observer
  */
 class AddDotpayShortcutsObserver implements ObserverInterface
 {
-    /**
-     * @var \Dotpay\Dotpay\Helper\Shortcut\Factory
-     */
-    protected $shortcutFactory;
-
     /**
      * @var DotpayConfig
      */
@@ -24,19 +19,16 @@ class AddDotpayShortcutsObserver implements ObserverInterface
     /**
      * Constructor
      *
-     * @param \Dotpay\Dotpay\Helper\Shortcut\Factory $shortcutFactory
      * @param DotpayConfig $dotpayConfig
      */
     public function __construct(
-//        \Dotpay\Dotpay\Helper\Shortcut\Factory $shortcutFactory,
         DotpayConfig $dotpayConfig
     ) {
-//        $this->shortcutFactory = $shortcutFactory;
         $this->dotpayConfig = $dotpayConfig;
     }
 
     /**
-     * Add PayPal shortcut buttons
+     * Add Dotpay shortcut buttons
      *
      * @param EventObserver $observer
      * @return void
