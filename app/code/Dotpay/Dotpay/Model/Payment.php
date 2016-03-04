@@ -5,9 +5,10 @@
 
 namespace Dotpay\Dotpay\Model;
 
+use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Quote\Api\Data\CartInterface;
 
-class Payment extends \Magento\Payment\Model\Method\AbstractMethod
+class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements ConfigProviderInterface
 {
     const CODE = 'dotpay_dotpay';
 
@@ -18,6 +19,12 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
     protected $_minAmount = null;
     protected $_maxAmount = null;
     
+    protected $_storeManager;
+    
+    /**
+     * @var Config
+     */
+    protected $config;
     
     protected $_supportedCurrencyCodes = array(
         'PLN'
@@ -41,6 +48,7 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \Magento\Directory\Model\CountryFactory $countryFactory,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         array $data = array()
     ) {
         parent::__construct(
@@ -55,11 +63,13 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
             null,
             $data
         );
-
+        
         $this->_countryFactory = $countryFactory;
 
         $this->_minAmount = $this->getConfigData('min_order_total');
         $this->_maxAmount = $this->getConfigData('max_order_total');
+        
+        $this->_storeManager = $storeManager;
     }
 
     /**
@@ -93,5 +103,31 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod
             return false;
         }
         return true;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfig()
+    {
+        $config = [
+            'payment' => [
+                'dotpay' => [
+                    'paymentAcceptanceMarkSrc' => $this->getPaymentMarkImageUrl(),
+                ]
+            ]
+        ];
+        return $config;
+    }
+    
+    /**
+     * Get Dotpay "mark" image URL
+     *
+     * @return string
+     */
+    public function getPaymentMarkImageUrl()
+    {
+        $baseUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_STATIC);
+        return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/dotpay.gif';
     }
 }
