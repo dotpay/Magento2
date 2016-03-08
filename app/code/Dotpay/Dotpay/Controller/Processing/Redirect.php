@@ -12,27 +12,21 @@ class Redirect extends Dotpay {
 
     public function execute() {
         
-        $dotTest = (int) $this->_model->getConfigData('test');
-        $dotAction = $this->_model->getConfigData('redirect_url');
-        if(1 === $dotTest) {
-            $dotAction = $this->_model->getConfigData('redirect_url_test');
-        }
-        $dotId = $this->_model->getConfigData('id');
-        $dotControl = $this->_checkoutSession->getLastRealOrder()->getEntityId();
-        $dotPinfo = "Sklep - {$_SERVER['HTTP_HOST']}";
-        $amount = round($this->_checkoutSession->getLastRealOrder()->getGrandTotal(), 2);
-        $dotAmount = sprintf("%01.2f", $amount);
-        $dotCurrency = $this->_checkoutSession->getLastRealOrder()->getOrderCurrencyCode();
-        $dotDescription = __("Order ID: %1", $this->_checkoutSession->getLastRealOrder()->getRealOrderId());
-        $lang = \Locale::getRegion($this->localeResolver->getLocale());
-        $dotLang = strtolower($lang);
-        $dorUrl = "http://{$_SERVER['HTTP_HOST']}/dotpay/processing/back";
-        $dorUrlC = "http://{$_SERVER['HTTP_HOST']}/dotpay/notification/response";
-        $dotApiVersion = 'dev';
-        $dotType = 0;
-        $dotFirstname = $this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getFirstname();
-        $dotLastname = $this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getLastname();
-        $dotEmail = $this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getEmail();
+        $dotAction = $this->getDotAction();
+        $dotId = $this->getDotId();
+        $dotControl = $this->getDotControl();
+        $dotPinfo = $this->getDotPinfo();
+        $dotAmount = $this->getDotAmount();
+        $dotCurrency = $this->getDotCurrency();
+        $dotDescription = $this->getDotDescription();
+        $dotLang = $this->getDotLang();
+        $dotUrl = $this->getDotUrl();
+        $dotUrlC = $this->getDotUrlC();
+        $dotApiVersion = $this->getDotApiVersion();
+        $dotType = $this->getDotType();
+        $dotFirstname = $this->getDotFirstname();
+        $dotLastname = $this->getDotLastname();
+        $dotEmail = $this->getDotEmail();
         
 
         $form = <<<END
@@ -44,8 +38,8 @@ class Redirect extends Dotpay {
     <input type="hidden" name="currency" value="{$dotCurrency}" />
     <input type="hidden" name="description" value="{$dotDescription}"/>
     <input type="hidden" name="lang" value="{$dotLang}" />            
-    <input type="hidden" name="URL" value="{$dorUrl}" />            
-    <input type="hidden" name="URLC" value="{$dorUrlC}" />            
+    <input type="hidden" name="URL" value="{$dotUrl}" />            
+    <input type="hidden" name="URLC" value="{$dotUrlC}" />            
     <input type="hidden" name="api_version" value="{$dotApiVersion}" />            
     <input type="hidden" name="type" value="{$dotType}" />      
     <input type="hidden" name="firstname" value="{$dotFirstname}" />      
@@ -73,5 +67,13 @@ END;
 END;
 
         $this->getResponse()->setBody($html);
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotType() {
+        return 0;
     }
 }
