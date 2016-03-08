@@ -55,6 +55,8 @@ class Widget extends Dotpay {
             'txtSubmit' => __('Continue'),
             'action' => $this->getDotAction(),
             'hiddenFields' => $this->getHiddenFields(),
+            'agreement_bylaw' =>  $this->getDotpayAgreement('bylaw'),
+            'agreement_personal_data' => $this->getDotpayAgreement('personal_data'),
         ));
         
         
@@ -95,5 +97,52 @@ class Widget extends Dotpay {
      */
     protected function getDotChLock() {
         return 1;
+    }
+    
+    protected function getDotpayAgreement($what) {
+        $resultStr = '';
+        
+        $dotpay_url = $this->getDotAction();
+        $payment_currency = $this->getDotCurrency();
+        
+        $dotpay_id = $this->getDotId();
+        
+        $order_amount = $this->getDotAmount();
+        
+        $dotpay_lang = $this->getDotLang();
+        
+        $curl_url = "{$dotpay_url}payment_api/channels/";
+        $curl_url .= "?currency={$payment_currency}";
+        $curl_url .= "&id={$dotpay_id}";
+        $curl_url .= "&amount={$order_amount}";
+        $curl_url .= "&lang={$dotpay_lang}";
+        
+        /**
+         * curl
+         */
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_URL, $curl_url);
+        curl_setopt($ch, CURLOPT_REFERER, $curl_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $resultJson = curl_exec($ch);
+        curl_close($ch);
+        
+        /**
+         * 
+         */
+        $result = json_decode($resultJson, true);
+
+        foreach ($result['forms'] as $forms) {
+            foreach ($forms['fields'] as $forms1) {
+                if ($forms1['name'] == $what) {
+                    $resultStr = $forms1['description_html'];
+                }
+            }
+        }
+
+        return $resultStr;
     }
 }

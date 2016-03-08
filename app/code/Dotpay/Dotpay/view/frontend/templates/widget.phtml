@@ -35,6 +35,19 @@ $dataWidget = $block->getDataWidget();
         
         
         <p class="my-form-widget-container"></p>
+        
+        <p>
+            <label>
+                <input type="checkbox" id="bylaw" name="bylaw" value="1" checked>
+                <?php echo $dataWidget['agreement_bylaw']; ?>
+            </label>
+        </p>
+        <p>
+            <label>
+                <input type="checkbox" id="personal_data" name="personal_data" value="1" checked>
+                <?php echo $dataWidget['agreement_personal_data']; ?>
+            </label>
+        </p>
 
         <p class="form-submit">
             <?php foreach($dataWidget['hiddenFields'] as $k => $v) : ?>
@@ -47,7 +60,7 @@ $dataWidget = $block->getDataWidget();
             .my-form-widget-container .dotpay-channels {
                 float: left;
             }
-            .form-submit {
+            .my-form-widget-container + p {
                 clear: both;
             }
             #submit_dotpay_payment_form {
