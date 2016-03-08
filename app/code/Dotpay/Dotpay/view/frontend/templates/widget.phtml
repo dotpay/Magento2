@@ -34,6 +34,8 @@ $dataWidget = $block->getDataWidget();
         
         
         
+        
+        
         <p class="my-form-widget-container"></p>
         
         <p>
@@ -67,5 +69,40 @@ $dataWidget = $block->getDataWidget();
                 font-size: 24px;
             }
         </style>
+        
+        <script type="text/javascript">
+            $('#submit_dotpay_payment_form').hide();
+
+            $(document).ready(function() {
+                var checkChannel = false;
+
+                function submitHideShow() {
+                    var checkBylaw = $('#bylaw').is(':checked');
+                    var checkPersonalData = $('#personal_data').is(':checked')
+
+                    if(checkChannel && checkBylaw && checkPersonalData) {
+                        $('#submit_dotpay_payment_form').show();
+                    } else {
+                        $('#submit_dotpay_payment_form').hide();
+                    }
+                }
+
+                $('body').on('click', '.channel-container', function(){
+                    if($(this).hasClass('not-online')) {
+                         checkChannel = false;
+                    } else {
+                        checkChannel = true;
+                    }
+                    submitHideShow();
+                });
+
+                $('body').on('click', '#bylaw', submitHideShow);
+                $('body').on('click', '#personal_data', submitHideShow);
+                
+                $('body').on('click', '#submit_dotpay_payment_form', function(){
+                    $('body').css('cursor', 'wait');
+                });
+            });
+        </script>
     </form>
 </div>
