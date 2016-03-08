@@ -50,9 +50,50 @@ class Widget extends Dotpay {
     public function execute() {
         $this->_view->getPage()->getConfig()->getTitle()->set(__('Dotpay channels payment'));
         
-        $this->_coreRegistry->register('foo', 'bar');
+        $this->_coreRegistry->register('dataWidget', array(
+            'txtP' => __('You chose payment by Dotpay. Select a payment channel and click Continue do proceed'),
+            'txtSubmit' => __('Continue'),
+            'action' => $this->getDotAction(),
+            'hiddenFields' => $this->getHiddenFields(),
+        ));
         
         
         return $this->_resultPageFactory->create();
+    }
+    
+    protected function getHiddenFields() {
+        return array(
+            'id' => $this->getDotId(),
+            'control' => $this->getDotControl(),
+            'p_info' => $this->getDotPinfo(),
+            'amount' => $this->getDotAmount(),
+            'currency' => $this->getDotCurrency(),
+            'description' => $this->getDotDescription(),
+            'lang' => $this->getDotLang(),
+            'URL' => $this->getDotUrl(),
+            'URLC' => $this->getDotUrlC(),
+            'api_version' => $this->getDotApiVersion(),
+            'type' => $this->getDotType(),
+            'ch_lock' => $this->getDotChLock(),
+            'firstname' => $this->getDotFirstname(),
+            'lastname' => $this->getDotLastname(),
+            'email' => $this->getDotEmail()
+        );
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotType() {
+        return 4;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotChLock() {
+        return 1;
     }
 }

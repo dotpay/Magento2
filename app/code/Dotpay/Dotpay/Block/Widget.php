@@ -37,9 +37,12 @@ class Widget extends \Magento\Framework\View\Element\Template
         parent::__construct($context, $data);
     }
     
-    public function getFoo()
+    /**
+     * 
+     * @return array
+     */
+    public function getDataWidget()
     {
-        // will return 'bar'
-        return $this->_coreRegistry->registry('foo');
+        return $this->_coreRegistry->registry('dataWidget');
     }
 }
