@@ -59,7 +59,6 @@ class Widget extends Dotpay {
             'agreement_personal_data' => $this->getDotpayAgreement('personal_data'),
         ));
         
-        
         return $this->_resultPageFactory->create();
     }
     
