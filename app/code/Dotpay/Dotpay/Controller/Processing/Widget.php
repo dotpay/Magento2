@@ -48,8 +48,6 @@ class Widget extends Dotpay {
     }
 
     public function execute() {
-        $this->_view->getPage()->getConfig()->getTitle()->set(__('Dotpay channels payment'));
-        
         $this->_coreRegistry->register('dataWidget', array(
             'txtP' => __('You chose payment by Dotpay. Select a payment channel and click Continue do proceed'),
             'txtSubmit' => __('Continue'),
@@ -58,6 +56,11 @@ class Widget extends Dotpay {
             'agreement_bylaw' =>  $this->getDotpayAgreement('bylaw'),
             'agreement_personal_data' => $this->getDotpayAgreement('personal_data'),
         ));
+        
+        /**
+         * must be before return?
+         */
+        $this->_view->getPage()->getConfig()->getTitle()->set(__('Dotpay channels payment'));
         
         return $this->_resultPageFactory->create();
     }
