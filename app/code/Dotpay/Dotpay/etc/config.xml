@@ -12,7 +12,7 @@
                 <model>Dotpay\Dotpay\Model\Payment</model>
                 <payment_action>authorize_capture</payment_action>
                 <title>Dotpay</title>
-                <redirect_url>https://ssl.dotpay.pl/</redirect_url>
+                <redirect_url>https://ssl.dotpay.pl/t2/</redirect_url>
                 <redirect_url_test>https://ssl.dotpay.pl/test_payment/</redirect_url_test>
                 <authorized_ips>
                     <ip1>195.150.9.37</ip1>

@@ -1,0 +1,104 @@
+<?php
+/**
+ * Dotpay widget template
+ */
+
+// @codingStandardsIgnoreFile
+/**
+ * @var \Dotpay\Dotpay\Block\Widget $block
+ */
+
+/**
+ * @var array
+ */
+$dataWidget = $block->getDataWidget();
+
+?>
+<div>
+    <form method="post" action="<?php echo $dataWidget['action']; ?>">
+        <p><?php echo $dataWidget['txtP']; ?></p>
+        
+        <link href="<?php echo $dataWidget['action']; ?>widget/payment_widget.min.css" rel="stylesheet">
+        <script type="text/javascript" id="dotpay-payment-script" src="<?php echo $dataWidget['action']; ?>widget/payment_widget.js"></script>
+        <script type="text/javascript">
+            var dotpayWidgetConfig = {
+                sellerAccountId: '<?php echo $dataWidget['hiddenFields']['id']; ?>',
+                amount: '<?php echo $dataWidget['hiddenFields']['amount']; ?>',
+                currency: '<?php echo $dataWidget['hiddenFields']['currency']; ?>',
+                lang: '<?php echo $dataWidget['hiddenFields']['lang']; ?>',
+                widgetFormContainerClass: 'my-form-widget-container',
+                offlineChannel: 'mark',
+                offlineChannelTooltip: true
+            };
+        </script>
+        
+        <p class="my-form-widget-container"></p>
+        
+        <p>
+            <label>
+                <input type="checkbox" id="bylaw" name="bylaw" value="1" checked>
+                <?php echo $dataWidget['agreement_bylaw']; ?>
+            </label>
+        </p>
+        <p>
+            <label>
+                <input type="checkbox" id="personal_data" name="personal_data" value="1" checked>
+                <?php echo $dataWidget['agreement_personal_data']; ?>
+            </label>
+        </p>
+
+        <p class="form-submit">
+            <?php foreach($dataWidget['hiddenFields'] as $k => $v) : ?>
+                <input type="hidden" value="<?php echo $v; ?>" name="<?php echo $k; ?>">
+            <?php endforeach; ?>
+            <input id="submit_dotpay_payment_form" class="button" type="submit" value="<?php echo $dataWidget['txtSubmit']; ?>">
+        </p>
+        
+        <style type="text/css" scoped>
+            .my-form-widget-container .dotpay-channels {
+                float: left;
+            }
+            .my-form-widget-container + p {
+                clear: both;
+            }
+            #submit_dotpay_payment_form {
+                font-size: 24px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            $('#submit_dotpay_payment_form').hide();
+
+            $(document).ready(function() {
+                var checkChannel = false;
+
+                function submitHideShow() {
+                    var checkBylaw = $('#bylaw').is(':checked');
+                    var checkPersonalData = $('#personal_data').is(':checked')
+
+                    if(checkChannel && checkBylaw && checkPersonalData) {
+                        $('#submit_dotpay_payment_form').show();
+                    } else {
+                        $('#submit_dotpay_payment_form').hide();
+                    }
+                }
+
+                $('body').on('click', '.channel-container', function(){
+                    if($(this).hasClass('not-online')) {
+                         checkChannel = false;
+                    } else {
+                        checkChannel = true;
+                    }
+                    submitHideShow();
+                });
+
+                $('body').on('click', '#bylaw', submitHideShow);
+                $('body').on('click', '#personal_data', submitHideShow);
+                
+                $('body').on('click', '#submit_dotpay_payment_form', function(){
+                    $('body').css('cursor', 'wait');
+                });
+            });
+        </script>
+    </form>
+</div>

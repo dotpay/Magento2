@@ -114,6 +114,7 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
             'payment' => [
                 'dotpay' => [
                     'paymentAcceptanceMarkSrc' => $this->getPaymentMarkImageUrl(),
+                    'isDotpayWidget' => $this->isDotpayWidget(),
                 ]
             ]
         ];
@@ -129,5 +130,9 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
     {
         $baseUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_STATIC);
         return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/dotpay.gif';
+    }
+    
+    protected function isDotpayWidget() {
+        return (int) $this->getConfigData('widget');
     }
 }

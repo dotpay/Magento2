@@ -58,7 +58,13 @@ define(
                 return true;
             },
             afterPlaceOrder: function () {
-                window.location.replace(url.build('dotpay/processing/redirect'));
+                var isDotpayWidget = parseInt(window.checkoutConfig.payment.dotpay.isDotpayWidget);
+                
+                if(isDotpayWidget) {
+                    window.location.replace(url.build('dotpay/processing/widget'));
+                } else {
+                    window.location.replace(url.build('dotpay/processing/redirect'));
+                }
             },
             getPaymentAcceptanceMarkSrc: function() {
                 return window.checkoutConfig.payment.dotpay.paymentAcceptanceMarkSrc;
