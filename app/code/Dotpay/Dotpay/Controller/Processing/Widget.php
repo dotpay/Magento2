@@ -65,26 +65,6 @@ class Widget extends Dotpay {
         return $this->_resultPageFactory->create();
     }
     
-    protected function getHiddenFields() {
-        return array(
-            'id' => $this->getDotId(),
-            'control' => $this->getDotControl(),
-            'p_info' => $this->getDotPinfo(),
-            'amount' => $this->getDotAmount(),
-            'currency' => $this->getDotCurrency(),
-            'description' => $this->getDotDescription(),
-            'lang' => $this->getDotLang(),
-            'URL' => $this->getDotUrl(),
-            'URLC' => $this->getDotUrlC(),
-            'api_version' => $this->getDotApiVersion(),
-            'type' => $this->getDotType(),
-            'ch_lock' => $this->getDotChLock(),
-            'firstname' => $this->getDotFirstname(),
-            'lastname' => $this->getDotLastname(),
-            'email' => $this->getDotEmail()
-        );
-    }
-    
     /**
      * 
      * @return string
