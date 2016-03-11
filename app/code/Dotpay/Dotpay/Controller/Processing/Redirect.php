@@ -16,6 +16,12 @@ class Redirect extends Dotpay {
         
         $hiddenFields = $this->getHiddenFields();
         
+        $security = $this->_model->isDotpaySecurity();
+        if($security) {
+            $chk = $this->buildSignature4Request();
+            $hiddenFields['CHK'] = $chk;
+        }
+        
         $fields = '';
         foreach($hiddenFields as $k => $v) {
             $fields .= $this->genField($k, $v);
@@ -46,14 +52,6 @@ END;
 END;
 
         $this->getResponse()->setBody($html);
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    protected function getDotType() {
-        return 0;
     }
     
     protected function genField($name, $value) {
