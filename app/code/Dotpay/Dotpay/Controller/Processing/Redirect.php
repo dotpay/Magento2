@@ -17,7 +17,7 @@ class Redirect extends Dotpay {
         $hiddenFields = $this->getHiddenFields();
         
         $security = $this->_model->isDotpaySecurity();
-        if($security) {
+        if(1 === $security) {
             $chk = $this->buildSignature4Request();
             $hiddenFields['CHK'] = $chk;
         }

@@ -48,13 +48,22 @@ class Widget extends Dotpay {
     }
 
     public function execute() {
+        $hiddenFields = $this->getHiddenFields();
+        
+        $security = $this->_model->isDotpaySecurity();
+        if(1 === $security) {
+            $chk = $this->buildSignature4Request();
+            $hiddenFields['CHK'] = $chk;
+        }
+        
         $this->_coreRegistry->register('dataWidget', array(
             'txtP' => __('You chose payment by Dotpay. Select a payment channel and click Continue do proceed'),
             'txtSubmit' => __('Continue'),
             'action' => $this->getDotAction(),
-            'hiddenFields' => $this->getHiddenFields(),
+            'hiddenFields' => $hiddenFields,
             'agreement_bylaw' =>  $this->getDotpayAgreement('bylaw'),
             'agreement_personal_data' => $this->getDotpayAgreement('personal_data'),
+            'signatureUrl' => $this->getDotUrlSignature(),
         ));
         
         /**

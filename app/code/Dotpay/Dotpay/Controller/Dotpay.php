@@ -166,6 +166,14 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * 
      * @return string
      */
+    protected function getDotUrlSignature() {
+        return "http://{$_SERVER['HTTP_HOST']}/dotpay/processing/signature";
+    }
+    
+    /**
+     * 
+     * @return string
+     */
     protected function getDotApiVersion() {
         return 'dev';
     }
@@ -263,7 +271,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             $fieldsRequestArray['channel'] = $channel;
         }
         
-        if($widget) {
+        if(1 === $widget) {
             $fieldsRequestArray['bylaw'] = '1';
             $fieldsRequestArray['personal_data'] = '1';
         }

@@ -96,7 +96,29 @@ $dataWidget = $block->getDataWidget();
                 $('body').on('click', '#personal_data', submitHideShow);
                 
                 $('body').on('click', '#submit_dotpay_payment_form', function(){
-                    $('body').css('cursor', 'wait');
+                    var channel;
+                
+                    $('input[name="channel"]').each(function(key, val){
+                        var checked = $(val).is(':checked');
+                        if(checked) {
+                            channel = $(val).val();
+                            return false;
+                        }
+                    });
+
+                    var data = {
+                        channel: channel
+                    };
+
+                    if(channel) {
+                        $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
+                            $('input[name="CHK"]').val(result);
+                            $('body').css('cursor', 'wait');
+                            $('#redirectDotpay').submit();
+                        });
+                    }
+
+                    return false;
                 });
             });
         </script>
