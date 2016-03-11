@@ -48,13 +48,22 @@ class Widget extends Dotpay {
     }
 
     public function execute() {
+        $hiddenFields = $this->getHiddenFields();
+        
+        $security = $this->_model->isDotpaySecurity();
+        if(1 === $security) {
+            $chk = $this->buildSignature4Request();
+            $hiddenFields['CHK'] = $chk;
+        }
+        
         $this->_coreRegistry->register('dataWidget', array(
             'txtP' => __('You chose payment by Dotpay. Select a payment channel and click Continue do proceed'),
             'txtSubmit' => __('Continue'),
             'action' => $this->getDotAction(),
-            'hiddenFields' => $this->getHiddenFields(),
+            'hiddenFields' => $hiddenFields,
             'agreement_bylaw' =>  $this->getDotpayAgreement('bylaw'),
             'agreement_personal_data' => $this->getDotpayAgreement('personal_data'),
+            'signatureUrl' => $this->getDotUrlSignature(),
         ));
         
         /**
@@ -63,26 +72,6 @@ class Widget extends Dotpay {
         $this->_view->getPage()->getConfig()->getTitle()->set(__('Dotpay channels payment'));
         
         return $this->_resultPageFactory->create();
-    }
-    
-    protected function getHiddenFields() {
-        return array(
-            'id' => $this->getDotId(),
-            'control' => $this->getDotControl(),
-            'p_info' => $this->getDotPinfo(),
-            'amount' => $this->getDotAmount(),
-            'currency' => $this->getDotCurrency(),
-            'description' => $this->getDotDescription(),
-            'lang' => $this->getDotLang(),
-            'URL' => $this->getDotUrl(),
-            'URLC' => $this->getDotUrlC(),
-            'api_version' => $this->getDotApiVersion(),
-            'type' => $this->getDotType(),
-            'ch_lock' => $this->getDotChLock(),
-            'firstname' => $this->getDotFirstname(),
-            'lastname' => $this->getDotLastname(),
-            'email' => $this->getDotEmail()
-        );
     }
     
     /**

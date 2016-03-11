@@ -8,6 +8,9 @@ namespace Dotpay\Dotpay\Controller;
 
 abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     
+    // STR EMPTY
+    const STR_EMPTY = '';
+    
     /**
      * @var \Magento\Customer\Model\Session
      */
@@ -163,6 +166,14 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * 
      * @return string
      */
+    protected function getDotUrlSignature() {
+        return "http://{$_SERVER['HTTP_HOST']}/dotpay/processing/signature";
+    }
+    
+    /**
+     * 
+     * @return string
+     */
     protected function getDotApiVersion() {
         return 'dev';
     }
@@ -189,5 +200,100 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      */
     protected function getDotEmail() {
         return $this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getEmail();
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    protected function getHiddenFields() {
+        return array(
+            'id' => $this->getDotId(),
+            'control' => $this->getDotControl(),
+            'p_info' => $this->getDotPinfo(),
+            'amount' => $this->getDotAmount(),
+            'currency' => $this->getDotCurrency(),
+            'description' => $this->getDotDescription(),
+            'lang' => $this->getDotLang(),
+            'URL' => $this->getDotUrl(),
+            'URLC' => $this->getDotUrlC(),
+            'api_version' => $this->getDotApiVersion(),
+            'type' => $this->getDotType(),
+            'ch_lock' => $this->getDotChLock(),
+            'firstname' => $this->getDotFirstname(),
+            'lastname' => $this->getDotLastname(),
+            'email' => $this->getDotEmail()
+        );
+    }
+    
+    /**
+     * 
+     * @param array $hiddenFields
+     * @param type $channel
+     * @return type
+     */
+    protected function buildSignature4Request($channel = null) {
+        $fieldsRequestArray = array(
+            'DOTPAY_PIN' => $this->_model->getConfigData('pin'),
+            'api_version' => $this->getDotApiVersion(),
+            'lang' => $this->getDotLang(),
+            'DOTPAY_ID' => $this->getDotId(),
+            'amount' => $this->getDotAmount(),
+            'currency' => $this->getDotCurrency(),
+            'description' => $this->getDotDescription(),
+            'control' => $this->getDotControl(),
+            'channel' => self::STR_EMPTY,
+            'ch_lock' => $this->getDotChLock(),
+            'URL' => $this->getDotUrl(),
+            'type' => $this->getDotType(),
+            'buttontext' => self::STR_EMPTY,
+            'URLC' => $this->getDotUrlC(),
+            'firstname' => $this->getDotFirstname(),
+            'lastname' => $this->getDotLastname(),
+            'email' => $this->getDotEmail(),
+            'street' => self::STR_EMPTY,
+            'street_n1' => self::STR_EMPTY,
+            'street_n2' => self::STR_EMPTY,
+            'state' => self::STR_EMPTY,
+            'addr3' => self::STR_EMPTY,
+            'city' => self::STR_EMPTY,
+            'postcode' => self::STR_EMPTY,
+            'phone' => self::STR_EMPTY,
+            'country' => self::STR_EMPTY,
+            'bylaw' => self::STR_EMPTY,
+            'personal_data' => self::STR_EMPTY,
+            'blik_code' => self::STR_EMPTY
+        );
+        
+        $widget = $this->_model->isDotpayWidget();
+        
+        if($channel) {
+            $fieldsRequestArray['channel'] = $channel;
+        }
+        
+        if(1 === $widget) {
+            $fieldsRequestArray['bylaw'] = '1';
+            $fieldsRequestArray['personal_data'] = '1';
+        }
+        
+        $fieldsRequestStr = implode(self::STR_EMPTY, $fieldsRequestArray);
+        
+        return hash('sha256', $fieldsRequestStr);
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotChLock() {
+        return 0;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotType() {
+        return 0;
     }
 }

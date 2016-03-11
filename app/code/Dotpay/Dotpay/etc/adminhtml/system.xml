@@ -27,6 +27,10 @@
                     <label>Widget (list channels on the shop)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="security" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Security (protect data sent)</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="test" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Test</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

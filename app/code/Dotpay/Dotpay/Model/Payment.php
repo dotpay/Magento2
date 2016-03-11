@@ -132,7 +132,11 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
         return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/dotpay.gif';
     }
     
-    protected function isDotpayWidget() {
+    public function isDotpayWidget() {
         return (int) $this->getConfigData('widget');
+    }
+    
+    public function isDotpaySecurity() {
+        return (int) $this->getConfigData('security');
     }
 }
