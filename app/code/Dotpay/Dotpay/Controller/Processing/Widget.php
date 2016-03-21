@@ -57,7 +57,7 @@ class Widget extends Dotpay {
          */
         $this->agreementByLaw = $this->getDotpayAgreement('bylaw');
         $this->agreementPersonalData = $this->getDotpayAgreement('personal_data');
-        
+
         /**
          * 
          */
@@ -65,7 +65,7 @@ class Widget extends Dotpay {
             'bylaw' => $this->agreementByLaw,
             'personal_data' => $this->agreementPersonalData,
         );
-        
+
          /**
          * hidden fields MasterPass, BLIK, Dotpay
          */
@@ -89,18 +89,18 @@ class Widget extends Dotpay {
                 'icon' => $this->_model->getPaymentDotpayImageUrl(),
             ),
         );
-        
+
         /**
          * 
          */
         if($this->_model->isDotpaySecurity()) {
             foreach($hiddenFields as $key => $val) {
                 $chk = $this->buildSignature4Request($key);
-                
+
                 $hiddenFields[$key]['fields']['CHK'] = $chk;
             }
         }
-        
+
         /**
          * 
          */
@@ -109,7 +109,7 @@ class Widget extends Dotpay {
         } else {
             $txtP = __('You chose payment by Dotpay. Click Continue do proceed', 'dotpay-payment-gateway');
         }
-        
+
         $this->_coreRegistry->register('dataWidget', array(
             'mp' => $this->_model->isDotpayMasterPass(),
             'blik' => $this->_model->isDotpayBlik(),
@@ -120,12 +120,12 @@ class Widget extends Dotpay {
             'hiddenFields' => $hiddenFields,
             'signatureUrl' => $this->getDotUrlSignature(),
         ));
-        
+
         /**
          * must be before return?
          */
         $this->_view->getPage()->getConfig()->getTitle()->set(__('Dotpay channels payment'));
-        
+
         return $this->_resultPageFactory->create();
     }
     
