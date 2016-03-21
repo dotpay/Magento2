@@ -15,6 +15,9 @@ $dataWidget = $block->getDataWidget();
 
 ?>
 <div>
+    <script>
+    
+    </script>
     <style type="text/css" scoped>
         form[form-target] {
             display:none;
@@ -63,7 +66,7 @@ $dataWidget = $block->getDataWidget();
     
     <?php $countStrategy = 0; ?>
     <?php foreach($dataWidget['hiddenFields'] as $keyR => $valR) : ?>
-        <?php if($valR['active']) : ?>
+        <?php if($valR['active'] || 'dotpay' === $keyR) : ?>
             <p>
                 <label form-target="<?php echo $keyR; ?>">
                     <input type="radio" name="strategy" form-target="<?php echo $keyR; ?>">
@@ -71,9 +74,8 @@ $dataWidget = $block->getDataWidget();
                 </label>
             </p>
             <form form-target="<?php echo $keyR; ?>" method="post" action="<?php echo $dataWidget['action']; ?>">
-                <?php if('dotpay' === $keyR) : ?>
+                <?php if('dotpay' === $keyR && $dataWidget['widget']) : ?>
                     <link href="<?php echo $dataWidget['action']; ?>widget/payment_widget.min.css" rel="stylesheet">
-                    <script type="text/javascript" id="dotpay-payment-script" src="<?php echo $dataWidget['action']; ?>widget/payment_widget.js"></script>
                     <script type="text/javascript">
                         var dotpayWidgetConfig = {
                             sellerAccountId: '<?php echo $valR['fields']['id']; ?>',
@@ -85,28 +87,31 @@ $dataWidget = $block->getDataWidget();
                             offlineChannelTooltip: true
                         };
                     </script>
+                    <script type="text/javascript" id="dotpay-payment-script" src="<?php echo $dataWidget['action']; ?>widget/payment_widget.js"></script>
                 <?php endif; ?>
 
                 <?php foreach($valR['fields'] as $keyF => $valF) : ?>
-                    <input type="hidden" value="<?php echo $valF; ?>" name="<?php echo $keyF; ?>">
+                    <input type="text" value="<?php echo $valF; ?>" name="<?php echo $keyF; ?>">
                 <?php endforeach; ?>
 
-                <?php if('dotpay' === $keyR) : ?>
+                <?php if('dotpay' === $keyR && $dataWidget['widget']) : ?>
                     <p class="my-form-widget-container"></p>
                 <?php endif; ?>
 
                 <?php if('blik' === $keyR) : ?>
                     <input form-target="<?php echo $keyR; ?>" type="text" value="" name="blik_code">
                 <?php endif; ?>
-
-                <?php foreach($valR['agreements'] as $keyA => $valA) : ?>
-                    <p>
-                        <label>
-                            <input type="checkbox" name="<?php echo $keyA; ?>" value="1" checked>
-                            <?php echo $valA; ?>
-                        </label>
-                    </p>
-                <?php endforeach; ?>
+                
+                <?php if('dotpay' !== $keyR || ('dotpay' === $keyR && $dataWidget['widget'])) : ?>
+                    <?php foreach($valR['agreements'] as $keyA => $valA) : ?>
+                        <p>
+                            <label>
+                                <input type="checkbox" name="<?php echo $keyA; ?>" value="1" checked>
+                                <?php echo $valA; ?>
+                            </label>
+                        </p>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
                 <p>
                     <input form-target="<?php echo $keyR; ?>" class="button" type="submit" value="<?php echo $dataWidget['txtSubmit']; ?>">
@@ -121,8 +126,29 @@ $dataWidget = $block->getDataWidget();
         <?php endif; ?>
     <?php endforeach; ?>
     
-    <?php if($dataWidget['mp'] || $dataWidget['blik'] || $dataWidget['widget']) : ?>
-        <script type="text/javascript">
+    <script type="text/javascript">
+        require(['jquery'], function($) {
+            var isMasterPass = '<?php echo $dataWidget['mp'] ?>';
+            if('true' === isMasterPass) {
+                isMasterPass = true;
+            } else {
+                isMasterPass = true;
+            }
+            
+            var isBlik = '<?php echo $dataWidget['blik'] ?>';
+            if('true' === isBlik) {
+                isBlik = true;
+            } else {
+                isBlik = true;
+            }
+            
+            var isWidget = '<?php echo $dataWidget['widget'] ?>';
+            if('true' === isWidget) {
+                isWidget = true;
+            } else {
+                isWidget = true;
+            }
+            
             $(document).ready(function() {
                 $('form[form-target]').hide();
 
@@ -259,9 +285,11 @@ $dataWidget = $block->getDataWidget();
                 }
 
                 function submitWait() {
-                    
+
                 }
             });
-        </script>
-    <?php endif; ?>
+        });
+        
+        
+    </script>
 </div>
