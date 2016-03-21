@@ -15,6 +15,120 @@ $dataWidget = $block->getDataWidget();
 
 ?>
 <div>
+    <style type="text/css" scoped>
+        form[form-target] {
+            /*display:none;*/
+        }
+        form[form-target] input[type="submit"] {
+            /*display:none;*/
+            font-size: 24px;
+        }
+        img.mp {
+            height: 60px;
+        }
+        img.blik {
+            height: 35px;
+        }
+        img.dotpay {
+            height: 19px;
+        }
+        label {
+            cursor: pointer;
+        }
+        label input[form-target="mp"]{
+            height: 60px;
+        }
+        label input[form-target="blik"]{
+            height: 35px;
+        }
+        label input[form-target="dotpay"]{
+            height: 19px;
+        }
+        label[form-target] {
+            line-height: 60px;
+        }
+        .my-form-widget-container .dotpay-channels {
+            float: left;
+        }
+        .my-form-widget-container + p {
+            clear: both;
+        }
+        input[name="blik_code"] {
+            width:200px;
+            margin: 0px 0px 20px 0px;
+        }
+    </style>
+    
+    <p><?php echo $dataWidget['txtP']; ?></p>
+    
+    <?php $countStrategy = 0; ?>
+    <?php foreach($dataWidget['hiddenFields'] as $keyR => $valR) : ?>
+        <?php if($valR['active']) : ?>
+            <p>
+                <label form-target="<?php echo $keyR; ?>">
+                    <input type="radio" name="strategy" form-target="<?php echo $keyR; ?>">
+                    <img class="<?php echo $keyR; ?>" src="<?php echo $valR['icon']; ?>">
+                </label>
+            </p>
+            <form form-target="<?php echo $keyR; ?>" method="post" action="<?php echo $dataWidget['action']; ?>">
+                <?php if('dotpay' === $keyR) : ?>
+                    <link href="<?php echo $dataWidget['action']; ?>widget/payment_widget.min.css" rel="stylesheet">
+                    <script type="text/javascript" id="dotpay-payment-script" src="<?php echo $dataWidget['action']; ?>widget/payment_widget.js"></script>
+                    <script type="text/javascript">
+                        var dotpayWidgetConfig = {
+                            sellerAccountId: '<?php echo $valR['fields']['id']; ?>',
+                            amount: '<?php echo $valR['fields']['amount']; ?>',
+                            currency: '<?php echo $valR['fields']['currency']; ?>',
+                            lang: '<?php echo $valR['fields']['lang']; ?>',
+                            widgetFormContainerClass: 'my-form-widget-container',
+                            offlineChannel: 'mark',
+                            offlineChannelTooltip: true
+                        };
+                    </script>
+                <?php endif; ?>
+
+                <?php foreach($valR['fields'] as $keyF => $valF) : ?>
+                    <input type="hidden" value="<?php echo $valF; ?>" name="<?php echo $keyF; ?>">
+                <?php endforeach; ?>
+
+                <?php if('dotpay' === $keyR) : ?>
+                    <p class="my-form-widget-container"></p>
+                <?php endif; ?>
+
+                <?php if('blik' === $keyR) : ?>
+                    <input form-target="<?php echo $keyR; ?>" type="text" value="" name="blik_code">
+                <?php endif; ?>
+
+                <?php foreach($valR['agreements'] as $keyA => $valA) : ?>
+                    <p>
+                        <label>
+                            <input type="checkbox" name="<?php echo $keyA; ?>" value="1" checked>
+                            <?php echo $valA; ?>
+                        </label>
+                    </p>
+                <?php endforeach; ?>
+
+                <p>
+                    <input form-target="<?php echo $keyR; ?>" class="button" type="submit" value="<?php echo $dataWidget['txtSubmit']; ?>">
+                </p>
+            </form>
+            
+            <?php if($valR !== end($dataWidget['hiddenFields'])) : ?>
+                <hr>
+            <?php endif; ?>
+            
+            <?php $countStrategy++; ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    
+</div>
+
+
+
+
+
+<?php return; ?>
+<div>
     <form id="redirectDotpay" method="post" action="<?php echo $dataWidget['action']; ?>">
         <p><?php echo $dataWidget['txtP']; ?></p>
         

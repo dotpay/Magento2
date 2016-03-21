@@ -134,6 +134,39 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
     }
     
     /**
+     * Get Dotpay "MasterPass" image URL
+     *
+     * @return string
+     */
+    public function getPaymentMasterPassImageUrl()
+    {
+        $baseUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_STATIC);
+        return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/MasterPass.png';
+    }
+    
+    /**
+     * Get Dotpay "Blik" image URL
+     *
+     * @return string
+     */
+    public function getPaymentBlikImageUrl()
+    {
+        $baseUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_STATIC);
+        return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/BLIK.png';
+    }
+    
+    /**
+     * Get Dotpay "Dotpay" image URL
+     *
+     * @return string
+     */
+    public function getPaymentDotpayImageUrl()
+    {
+        $baseUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_STATIC);
+        return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/dotpay.png';
+    }
+    
+    /**
      * 
      * @return boolean
      */

@@ -74,19 +74,19 @@ class Widget extends Dotpay {
                 'active' => $this->_model->isDotpayMasterPass(),
                 'fields' => $this->getHiddenFieldsMasterPass(),
                 'agreements' => $agreements,
-                'icon' => $this->getIconMasterPass(),
+                'icon' => $this->_model->getPaymentMasterPassImageUrl(),
             ),
             'blik' => array(
                 'active' => $this->_model->isDotpayBlik(),
                 'fields' => $this->getHiddenFieldsBlik(),
                 'agreements' => $agreements,
-                'icon' => $this->getIconBLIK(),
+                'icon' => $this->_model->getPaymentBlikImageUrl(),
             ),
             'dotpay' => array(
                 'active' => $this->_model->isDotpayWidget(),
                 'fields' => $this->getHiddenFieldsDotpay(),
                 'agreements' => $agreements,
-                'icon' => $this->getIconDotpay(),
+                'icon' => $this->_model->getPaymentDotpayImageUrl(),
             ),
         );
         
