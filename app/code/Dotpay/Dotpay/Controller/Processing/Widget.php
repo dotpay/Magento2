@@ -84,7 +84,7 @@ class Widget extends Dotpay {
             ),
             'dotpay' => array(
                 'active' => $this->_model->isDotpayWidget(),
-                'fields' => $this->getHiddenFieldsDotpay($order_id),
+                'fields' => $this->getHiddenFieldsDotpay(),
                 'agreements' => $agreements,
                 'icon' => $this->getIconDotpay(),
             ),
@@ -95,13 +95,7 @@ class Widget extends Dotpay {
          */
         if($this->_model->isDotpaySecurity()) {
             foreach($hiddenFields as $key => $val) {
-                $chk = $this->buildSignature4Request($hiddenFields, $key);
-                
-                if(!isset($_SESSION['hiddenFields'])) {
-                    $_SESSION['hiddenFields'] = array();
-                }
-                
-                $_SESSION['hiddenFields'][$key] = $val;
+                $chk = $this->buildSignature4Request($key);
                 
                 $hiddenFields[$key]['fields']['CHK'] = $chk;
             }
