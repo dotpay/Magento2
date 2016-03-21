@@ -115,8 +115,7 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
         $config = [
             'payment' => [
                 'dotpay' => [
-                    'paymentAcceptanceMarkSrc' => $this->getPaymentMarkImageUrl(),
-                    'isDotpayWidget' => $this->isDotpayWidget(),
+                    'paymentAcceptanceMarkSrc' => $this->getPaymentMarkImageUrl()
                 ]
             ]
         ];
