@@ -50,13 +50,23 @@ class Signature extends Dotpay {
     public function execute() {
         $chk = '';
         
+        $type = $this->getRequest()->getParam('type');
         $channel = $this->getRequest()->getParam('channel');
+        $blik = $this->getRequest()->getParam('blik');
         
-        if(is_scalar($channel)) {
-            $chk = $this->buildSignature4Request($channel);
-        } else {
-            $chk = $this->buildSignature4Request();
-        }
+        switch ($type) {
+            case 'mp':
+                $chk = $this->buildSignature4Request($type, $channel);
+                break;
+            case 'blik':
+                $chk = $this->buildSignature4Request($type, $channel, $blik);
+                break;
+            case 'dotpay':
+                $chk = $this->buildSignature4Request($type, $channel);
+                break;
+            default:
+        } 
+        
         die($chk);
     }
     
