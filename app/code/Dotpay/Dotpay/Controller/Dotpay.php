@@ -206,7 +206,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * 
      * @return array
      */
-    protected function getHiddenFields() {
+    private function getHiddenFields() {
         return array(
             'id' => $this->getDotId(),
             'control' => $this->getDotControl(),
@@ -218,8 +218,8 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             'URL' => $this->getDotUrl(),
             'URLC' => $this->getDotUrlC(),
             'api_version' => $this->getDotApiVersion(),
-            'type' => $this->getDotType(),
-            'ch_lock' => $this->getDotChLock(),
+            'type' => 0,
+            'ch_lock' => 0,
             'firstname' => $this->getDotFirstname(),
             'lastname' => $this->getDotLastname(),
             'email' => $this->getDotEmail()
@@ -228,29 +228,86 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     
     /**
      * 
-     * @param array $hiddenFields
-     * @param type $channel
-     * @return type
+     * @return array
      */
-    protected function buildSignature4Request($channel = null) {
+    protected function getHiddenFieldsDotpay() {
+        $hiddenFields = $this->getHiddenFields();
+        
+        if($this->_model->isDotpayWidget()) {
+            $hiddenFields['ch_lock'] = 1;
+            $hiddenFields['type'] = 4;
+        }
+        
+        return $hiddenFields;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    protected function getHiddenFieldsMasterPass() {
+        $hiddenFields = $this->getHiddenFields();
+        
+        $hiddenFields['channel'] = 71;
+        $hiddenFields['ch_lock'] = 1;
+        $hiddenFields['type'] = 4;
+        
+        return $hiddenFields;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    protected function getHiddenFieldsBlik() {
+        $hiddenFields = $this->getHiddenFields();
+        
+        $hiddenFields['channel'] = 73;
+        $hiddenFields['ch_lock'] = 1;
+        $hiddenFields['type'] = 4;
+        
+        return $hiddenFields;
+    }
+    
+    /**
+     * 
+     * @param string $type
+     * @param int $channel
+     * @param string $blik
+     * @return string
+     */
+    protected function buildSignature4Request($type, $channel = null, $blik = null) {
+        switch ($type) {
+            case 'mp':
+                $hiddenFields = $this->getHiddenFieldsMasterPass();
+                break;
+            case 'blik':
+                $hiddenFields = $this->getHiddenFieldsBlik();
+                break;
+            case 'dotpay':
+            default:
+                $hiddenFields = $this->getHiddenFieldsDotpay();
+        }
+        
+        
         $fieldsRequestArray = array(
             'DOTPAY_PIN' => $this->_model->getConfigData('pin'),
             'api_version' => $this->getDotApiVersion(),
-            'lang' => $this->getDotLang(),
-            'DOTPAY_ID' => $this->getDotId(),
-            'amount' => $this->getDotAmount(),
-            'currency' => $this->getDotCurrency(),
-            'description' => $this->getDotDescription(),
-            'control' => $this->getDotControl(),
+            'lang' => $hiddenFields['lang'],
+            'DOTPAY_ID' => $hiddenFields['id'],
+            'amount' => $hiddenFields['amount'],
+            'currency' => $hiddenFields['currency'],
+            'description' => $hiddenFields['description'],
+            'control' => $hiddenFields['control'],
             'channel' => self::STR_EMPTY,
-            'ch_lock' => $this->getDotChLock(),
-            'URL' => $this->getDotUrl(),
-            'type' => $this->getDotType(),
+            'ch_lock' => $hiddenFields['ch_lock'],
+            'URL' => $hiddenFields['URL'],
+            'type' => $hiddenFields['type'],
             'buttontext' => self::STR_EMPTY,
-            'URLC' => $this->getDotUrlC(),
-            'firstname' => $this->getDotFirstname(),
-            'lastname' => $this->getDotLastname(),
-            'email' => $this->getDotEmail(),
+            'URLC' => $hiddenFields['URLC'],
+            'firstname' => $hiddenFields['firstname'],
+            'lastname' => $hiddenFields['lastname'],
+            'email' => $hiddenFields['email'],
             'street' => self::STR_EMPTY,
             'street_n1' => self::STR_EMPTY,
             'street_n2' => self::STR_EMPTY,
@@ -265,35 +322,33 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             'blik_code' => self::STR_EMPTY
         );
         
-        $widget = $this->_model->isDotpayWidget();
-        
-        if($channel) {
-            $fieldsRequestArray['channel'] = $channel;
-        }
-        
-        if(1 === $widget) {
+         if('mp' === $type && $this->_model->isDotpayMasterPass()) {
+            if(isset($channel)) {
+                $fieldsRequestArray['channel'] = $channel;
+            }
             $fieldsRequestArray['bylaw'] = '1';
             $fieldsRequestArray['personal_data'] = '1';
+        } elseif('blik' === $type && $this->_model->isDotpayBlik()) {
+            if(isset($channel)) {
+                $fieldsRequestArray['channel'] = $channel;
+            }
+            if(isset($blik)) {
+                $fieldsRequestArray['blik_code'] = $blik;
+            }
+            $fieldsRequestArray['bylaw'] = '1';
+            $fieldsRequestArray['personal_data'] = '1';
+        } elseif('dotpay' === $type) {
+            if(isset($channel)) {
+                $fieldsRequestArray['channel'] = $channel;
+            }
+            if($this->_model->isDotpayWidget()) {
+                $fieldsRequestArray['bylaw'] = '1';
+                $fieldsRequestArray['personal_data'] = '1';
+            }
         }
         
         $fieldsRequestStr = implode(self::STR_EMPTY, $fieldsRequestArray);
         
         return hash('sha256', $fieldsRequestStr);
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    protected function getDotChLock() {
-        return 0;
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    protected function getDotType() {
-        return 0;
     }
 }
