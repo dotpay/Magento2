@@ -105,9 +105,6 @@ class Widget extends Dotpay {
          * 
          */
         if($this->_model->isDotpayMasterPass() || $this->_model->isDotpayBlik() || $this->_model->isDotpayWidget()) {
-            /**
-             * 
-             */
             $txtP = __('You chose payment by Dotpay. Select a payment channel and click Continue do proceed', 'dotpay-payment-gateway');
         } else {
             $txtP = __('You chose payment by Dotpay. Click Continue do proceed', 'dotpay-payment-gateway');
@@ -118,8 +115,6 @@ class Widget extends Dotpay {
             'txtSubmit' => __('Continue'),
             'action' => $this->getDotAction(),
             'hiddenFields' => $hiddenFields,
-            'agreement_bylaw' =>  $this->getDotpayAgreement('bylaw'),
-            'agreement_personal_data' => $this->getDotpayAgreement('personal_data'),
             'signatureUrl' => $this->getDotUrlSignature(),
         ));
         
