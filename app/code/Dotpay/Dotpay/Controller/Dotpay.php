@@ -299,7 +299,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             'currency' => $hiddenFields['currency'],
             'description' => $hiddenFields['description'],
             'control' => $hiddenFields['control'],
-            'channel' => self::STR_EMPTY,
+            'channel' => isset($hiddenFields['channel']) ? $hiddenFields['channel'] : self::STR_EMPTY,
             'ch_lock' => $hiddenFields['ch_lock'],
             'URL' => $hiddenFields['URL'],
             'type' => $hiddenFields['type'],
