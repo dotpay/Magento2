@@ -52,6 +52,10 @@ class Widget extends Dotpay {
     }
 
     public function execute() {
+        if(!$this->_checkoutSession->getLastRealOrder()->getEntityId()) {
+            return $this->resultRedirectFactory->create()->setUrl($this->_redirect->getRedirectUrl());
+        }
+        
         /**
          * 
          */

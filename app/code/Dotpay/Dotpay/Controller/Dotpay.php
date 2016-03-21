@@ -204,6 +204,70 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     
     /**
      * 
+     * @return string
+     */
+    protected function getDotPhone() {
+        return $this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getTelephone();
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotStreet() {
+        $result = '';
+        
+        $street = $this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getStreet();
+        
+        if(isset($street[0])) {
+            $result = $street[0];
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotStreetN1() {
+        $result = '';
+        
+        $street = $this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getStreet();
+        
+        if(isset($street[1])) {
+            $result = $street[1];
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotCity() {
+        return $this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getCity();
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotPostcode() {
+        return $this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getPostcode();
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotCountry() {
+        return strtoupper($this->_checkoutSession->getLastRealOrder()->getBillingAddress()->getCountryId());
+    }
+    
+    /**
+     * 
      * @return array
      */
     private function getHiddenFields() {
@@ -222,7 +286,13 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             'ch_lock' => 0,
             'firstname' => $this->getDotFirstname(),
             'lastname' => $this->getDotLastname(),
-            'email' => $this->getDotEmail()
+            'email' => $this->getDotEmail(),
+            'phone' => $this->getDotPhone(),
+            'street' => $this->getDotStreet(),
+            'street_n1' => $this->getDotStreetN1(),
+            'city' => $this->getDotCity(),
+            'postcode' => $this->getDotPostcode(),
+            'country' => $this->getDotCountry()
         );
     }
     
