@@ -21,6 +21,8 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
     
     protected $_storeManager;
     
+    protected $_agreements = true;
+    
     /**
      * @var Config
      */
@@ -132,11 +134,92 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
         return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/dotpay.gif';
     }
     
-    public function isDotpayWidget() {
-        return (int) $this->getConfigData('widget');
+    /**
+     * 
+     * @return boolean
+     */
+    public function isDotpayTest() {
+        $result = false;
+        
+        if (1 === (int) $this->getConfigData('test')) {
+            $result = true;
+        }
+        
+        return $result;
     }
     
+    /**
+     * 
+     * @return boolean
+     */
+    public function isDotpayMasterPass() {
+        $result = false;
+        
+        if (1 === (int) $this->getConfigData('masterpass')) {
+            $result = true;
+        }
+        
+        if(false === $this->_agreements) {
+            $result = false;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function isDotpayBlik() {
+        $result = false;
+        
+        if (1 === (int) $this->getConfigData('blik')) {
+            $result = true;
+        }
+        
+        if(false === $this->_agreements) {
+            $result = false;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function isDotpayWidget() {
+        $result = false;
+        
+        if (1 === (int) $this->getConfigData('widget')) {
+            $result = true;
+        }
+        
+        if(false === $this->_agreements) {
+            $result = false;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
     public function isDotpaySecurity() {
-        return (int) $this->getConfigData('security');
+        $result = false;
+        
+        if (1 === (int) $this->getConfigData('security')) {
+            $result = true;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 
+     */
+    public function disableAgreements() {
+        $this->_agreements = false;
     }
 }
