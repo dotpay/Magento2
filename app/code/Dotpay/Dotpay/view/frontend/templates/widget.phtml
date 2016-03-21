@@ -128,26 +128,9 @@ $dataWidget = $block->getDataWidget();
     
     <script type="text/javascript">
         require(['jquery'], function($) {
-            var isMasterPass = '<?php echo $dataWidget['mp'] ?>';
-            if('true' === isMasterPass) {
-                isMasterPass = true;
-            } else {
-                isMasterPass = true;
-            }
-            
-            var isBlik = '<?php echo $dataWidget['blik'] ?>';
-            if('true' === isBlik) {
-                isBlik = true;
-            } else {
-                isBlik = true;
-            }
-            
-            var isWidget = '<?php echo $dataWidget['widget'] ?>';
-            if('true' === isWidget) {
-                isWidget = true;
-            } else {
-                isWidget = true;
-            }
+            var isMasterPass = Boolean('<?php echo $dataWidget['mp'] ?>');
+            var isBlik = Boolean('<?php echo $dataWidget['blik'] ?>');
+            var isWidget = Boolean('<?php echo $dataWidget['widget'] ?>');
             
             $(document).ready(function() {
                 $('form[form-target]').hide();
@@ -184,22 +167,26 @@ $dataWidget = $block->getDataWidget();
                                 });
                             }
                         } else if('dotpay' === target) {
-                            data.type = target;
+                            if(isWidget){
+                                data.type = target;
 
-                            $('form[form-target="' + target + '"] input[name="channel"]').each(function(key, val){
-                                var channel = $(val).is(':checked');
-                                var online = !$(val).parent().parent().hasClass('not-online');
-                                if(channel && online) {
-                                    data.channel = $(val).val();
-                                    return false;
-                                }
-                            });
-
-                            if(data.channel) {
-                                $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                                    $('form[form-target="' + target + '"] input[name="CHK"]').val(result);
-                                    submitHideShow(target);
+                                $('form[form-target="' + target + '"] input[name="channel"]').each(function(key, val){
+                                    var channel = $(val).is(':checked');
+                                    var online = !$(val).parent().parent().hasClass('not-online');
+                                    if(channel && online) {
+                                        data.channel = $(val).val();
+                                        return false;
+                                    }
                                 });
+
+                                if(data.channel) {
+                                    $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
+                                        $('form[form-target="' + target + '"] input[name="CHK"]').val(result);
+                                        submitHideShow(target);
+                                    });
+                                }
+                            } else {
+                                submitHideShow(target);
                             }
                         }
 
@@ -277,6 +264,9 @@ $dataWidget = $block->getDataWidget();
                         $('form[form-target="' + target + '"] input[type="submit"]').show();
                         result = true;
                     } else if('dotpay' === target && checkBylaw && checkPersonalData) {
+                        $('form[form-target="' + target + '"] input[type="submit"]').show();
+                        result = true;
+                    } else if('dotpay' === target && !isWidget) {
                         $('form[form-target="' + target + '"] input[type="submit"]').show();
                         result = true;
                     }
