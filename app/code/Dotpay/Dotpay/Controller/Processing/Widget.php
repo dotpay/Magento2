@@ -111,6 +111,9 @@ class Widget extends Dotpay {
         }
         
         $this->_coreRegistry->register('dataWidget', array(
+            'mp' => $this->_model->isDotpayMasterPass(),
+            'blik' => $this->_model->isDotpayBlik(),
+            'widget' => $this->_model->isDotpayWidget(),
             'txtP' => $txtP,
             'txtSubmit' => __('Continue'),
             'action' => $this->getDotAction(),
