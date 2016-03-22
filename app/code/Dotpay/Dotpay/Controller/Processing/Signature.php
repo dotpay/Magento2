@@ -50,29 +50,26 @@ class Signature extends Dotpay {
     public function execute() {
         $chk = '';
         
+        $type = $this->getRequest()->getParam('type');
         $channel = $this->getRequest()->getParam('channel');
         
-        if(is_scalar($channel)) {
-            $chk = $this->buildSignature4Request($channel);
-        } else {
-            $chk = $this->buildSignature4Request();
-        }
+        switch ($type) {
+            case 'mp':
+                $chk = $this->buildSignature4Request($type, $channel);
+                break;
+            case 'blik':
+                $blik = $this->getRequest()->getParam('blik');
+                $chk = $this->buildSignature4Request($type, $channel, $blik);
+                break;
+            case 'dotpay':
+                if(!(bool) $this->getRequest()->getParam('isWidget')) {
+                    $this->_model->disableAgreements();
+                }
+                $chk = $this->buildSignature4Request($type, $channel);
+                break;
+            default:
+        } 
+        
         die($chk);
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    protected function getDotType() {
-        return 4;
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    protected function getDotChLock() {
-        return 1;
     }
 }

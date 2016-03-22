@@ -23,13 +23,25 @@
                 <field id="pin" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PIN</label>
                 </field>
-                <field id="widget" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Widget (list channels on the shop)</label>
+                <field id="masterpass" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>MasterPass (First Data Polska S.A.)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show separately in a shop channel</comment>
+                </field>
+                <field id="blik" translate="label" type="select" sortOrder="48" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>BLIK (Polski Standard Płatności Sp. z o.o.)</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show separately in a shop channel</comment>
+                </field>
+                <field id="widget" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Widget</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>list channels on the shop</comment>
                 </field>
                 <field id="security" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Security (protect data sent)</label>
+                    <label>Security</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>protect data sent</comment>
                 </field>
                 <field id="test" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Test</label>
