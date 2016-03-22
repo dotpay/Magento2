@@ -91,7 +91,7 @@ $dataWidget = $block->getDataWidget();
                 <?php endif; ?>
 
                 <?php foreach($valR['fields'] as $keyF => $valF) : ?>
-                    <input type="text" value="<?php echo $valF; ?>" name="<?php echo $keyF; ?>">
+                    <input type="hidden" value="<?php echo $valF; ?>" name="<?php echo $keyF; ?>">
                 <?php endforeach; ?>
 
                 <?php if('dotpay' === $keyR && $dataWidget['widget']) : ?>
@@ -134,6 +134,12 @@ $dataWidget = $block->getDataWidget();
             
             $(document).ready(function() {
                 $('form[form-target]').hide();
+                
+                if(!isMasterPass && !isBlik && !isWidget) {
+                    $('label[form-target]').hide();
+                    $('form[form-target="dotpay"]').show();
+                    $('form[form-target="dotpay"] input[type="submit"]').show();
+                }
 
                 $('body').on('click', 'input[name="strategy"]', function(){
                     $('form[form-target]').hide();
@@ -169,7 +175,8 @@ $dataWidget = $block->getDataWidget();
                         } else if('dotpay' === target) {
                             if(isWidget){
                                 data.type = target;
-
+                                data.isWidget = isWidget;
+                                
                                 $('form[form-target="' + target + '"] input[name="channel"]').each(function(key, val){
                                     var channel = $(val).is(':checked');
                                     var online = !$(val).parent().parent().hasClass('not-online');
@@ -221,6 +228,7 @@ $dataWidget = $block->getDataWidget();
                     var target = 'dotpay';
                     var data = {};
                     data.type = target;
+                    data.isWidget = isWidget;
 
                     $('input[name="channel"]', this).each(function(key, val){
                         var channel = $(val).is(':checked');
@@ -241,9 +249,8 @@ $dataWidget = $block->getDataWidget();
                 });
 
                 $('body').on('click', 'form[form-target] input[type="submit"]', function(){
-                    var target = $(this).attr('form-target');
-                    submitWait();
-                    $('form[form-target="' + target + '"]').submit();
+                    formSubmitWait();
+                    return true;
                 });
 
                 function submitHideShow(target) {
@@ -266,7 +273,7 @@ $dataWidget = $block->getDataWidget();
                     } else if('dotpay' === target && checkBylaw && checkPersonalData) {
                         $('form[form-target="' + target + '"] input[type="submit"]').show();
                         result = true;
-                    } else if('dotpay' === target && !isWidget) {
+                    } else if('dotpay' === target && (isMasterPass || isBlik) && !isWidget) {
                         $('form[form-target="' + target + '"] input[type="submit"]').show();
                         result = true;
                     }
@@ -274,8 +281,8 @@ $dataWidget = $block->getDataWidget();
                     return result;
                 }
 
-                function submitWait() {
-
+                function formSubmitWait() {
+                    $('body').css('cursor', 'wait');
                 }
             });
         });

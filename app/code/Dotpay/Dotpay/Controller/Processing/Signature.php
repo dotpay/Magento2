@@ -62,6 +62,9 @@ class Signature extends Dotpay {
                 $chk = $this->buildSignature4Request($type, $channel, $blik);
                 break;
             case 'dotpay':
+                if(!(bool) $this->getRequest()->getParam('isWidget')) {
+                    $this->_model->disableAgreements();
+                }
                 $chk = $this->buildSignature4Request($type, $channel);
                 break;
             default:

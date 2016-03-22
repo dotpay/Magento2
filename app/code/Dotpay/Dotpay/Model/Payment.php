@@ -231,7 +231,6 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
             $result = false;
         }
         
-        return false;
         return $result;
     }
     
