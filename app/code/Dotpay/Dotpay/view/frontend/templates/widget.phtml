@@ -157,7 +157,7 @@ $dataWidget = $block->getDataWidget();
 
                             if(data.channel) {
                                 $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                                    $('form[form-target="' + target + '"] input[name="CHK"]').val(result);
+                                    $('form[form-target="' + target + '"] input[name="chk"]').val(result);
                                     submitHideShow(target);
                                 });
                             }
@@ -168,7 +168,7 @@ $dataWidget = $block->getDataWidget();
 
                             if(data.channel && data.blik) {
                                 $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                                    $('form[form-target="' + target + '"] input[name="CHK"]').val(result);
+                                    $('form[form-target="' + target + '"] input[name="chk"]').val(result);
                                     submitHideShow(target);
                                 });
                             }
@@ -188,7 +188,7 @@ $dataWidget = $block->getDataWidget();
 
                                 if(data.channel) {
                                     $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                                        $('form[form-target="' + target + '"] input[name="CHK"]').val(result);
+                                        $('form[form-target="' + target + '"] input[name="chk"]').val(result);
                                         submitHideShow(target);
                                     });
                                 }
@@ -216,7 +216,7 @@ $dataWidget = $block->getDataWidget();
 
                     if(data.channel && data.blik) {
                         $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                            $('form[form-target="' + target + '"] input[name="CHK"]').val(result);
+                            $('form[form-target="' + target + '"] input[name="chk"]').val(result);
                             submitHideShow(target);
                         });
                     }
@@ -242,7 +242,7 @@ $dataWidget = $block->getDataWidget();
 
                     if(data.channel) {
                         $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                            $('form[form-target="' + target + '"] input[name="CHK"]').val(result);
+                            $('form[form-target="' + target + '"] input[name="chk"]').val(result);
                             submitHideShow(target);
                         });
                     }

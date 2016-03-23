@@ -101,7 +101,7 @@ class Widget extends Dotpay {
             foreach($hiddenFields as $key => $val) {
                 $chk = $this->buildSignature4Request($key);
 
-                $hiddenFields[$key]['fields']['CHK'] = $chk;
+                $hiddenFields[$key]['fields']['chk'] = $chk;
             }
         }
 
