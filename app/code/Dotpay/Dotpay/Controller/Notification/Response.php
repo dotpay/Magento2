@@ -154,7 +154,7 @@ class Response extends Dotpay {
 
     protected function checkSignature($order) {
         $hashDotpay = $this->fields['signature'];
-        $hashCalculate = $this->calculateSignature($order);
+        $hashCalculate = $this->calculateSignature();
 
         if ($hashDotpay !== $hashCalculate) {
             die('FAIL SIGNATURE');
@@ -217,7 +217,7 @@ class Response extends Dotpay {
         }
     }
 
-    protected function calculateSignature($order) {
+    protected function calculateSignature() {
         $string = '';
         $string .= $this->_model->getConfigData('pin');
 
