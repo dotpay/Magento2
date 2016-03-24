@@ -387,6 +387,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             'postcode' => $hiddenFields['postcode'],
             'phone' => $hiddenFields['phone'],
             'country' => $hiddenFields['country'],
+            'p_info' => $hiddenFields['p_info'],
             'bylaw' => self::STR_EMPTY,
             'personal_data' => self::STR_EMPTY,
             'blik_code' => self::STR_EMPTY
