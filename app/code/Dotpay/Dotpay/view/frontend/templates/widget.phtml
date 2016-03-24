@@ -99,7 +99,7 @@ $dataWidget = $block->getDataWidget();
                 <?php endif; ?>
 
                 <?php if('blik' === $keyR) : ?>
-                    <input form-target="<?php echo $keyR; ?>" type="text" value="" name="blik_code">
+                    <input form-target="<?php echo $keyR; ?>" type="text" value="" name="blik_code" required>
                 <?php endif; ?>
                 
                 <?php if('dotpay' !== $keyR || ('dotpay' === $keyR && $dataWidget['widget'])) : ?>
