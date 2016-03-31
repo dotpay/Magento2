@@ -23,6 +23,11 @@
                 <field id="pin" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PIN</label>
                 </field>
+                <field id="oneclick" translate="label" type="select" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>One-Click</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show separately in a shop channel</comment>
+                </field>
                 <field id="masterpass" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>MasterPass (First Data Polska S.A.)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
