@@ -162,8 +162,12 @@ class Widget extends Dotpay {
 
         $this->_coreRegistry->register('dataWidget', array(
             'oneclick' => $this->_model->isDotpayOneClick(),
+            'oneclickTxtValid' => __('6 or more characters'),
+            'oneclickTxtPlaceholder' => __('Card title 6 or more characters'),
             'mp' => $this->_model->isDotpayMasterPass(),
             'blik' => $this->_model->isDotpayBlik(),
+            'blikTxtValid' => __('Only 6 digits', 'dotpay-payment-gateway'),
+            'blikTxtPlaceholder' => __('Blik code 6 digits', 'dotpay-payment-gateway'),
             'widget' => $this->_model->isDotpayWidget(),
             'txtP' => $txtP,
             'txtSubmit' => __('Continue'),
