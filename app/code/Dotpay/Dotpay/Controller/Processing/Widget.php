@@ -69,29 +69,75 @@ class Widget extends Dotpay {
             'bylaw' => $this->agreementByLaw,
             'personal_data' => $this->agreementPersonalData,
         );
-
-         /**
-         * hidden fields MasterPass, BLIK, Dotpay
+        
+        /**
+         * hidden fields One-Click, MasterPass, BLIK, Dotpay
          */
-        $hiddenFields = array(
-            'mp' => array(
-                'active' => $this->_model->isDotpayMasterPass(),
-                'fields' => $this->getHiddenFieldsMasterPass(),
+        $hiddenFields = array();
+        
+         /**
+         * One-Click Cards
+         */
+        $cardList = $this->_model->cardList();
+        foreach($cardList as $cardV) {
+            $oneclick = array(
+                'active' => $this->_model->isDotpayOneClick(),
+                'fields' => $this->getHiddenFieldsOneClickRegister($cardV['oneclick_card_hash'], $cardV['oneclick_card_id']),
                 'agreements' => $agreements,
-                'icon' => $this->_model->getPaymentMasterPassImageUrl(),
-            ),
-            'blik' => array(
-                'active' => $this->_model->isDotpayBlik(),
-                'fields' => $this->getHiddenFieldsBlik(),
-                'agreements' => $agreements,
-                'icon' => $this->_model->getPaymentBlikImageUrl(),
-            ),
-            'dotpay' => array(
-                'active' => $this->_model->isDotpayWidget(),
-                'fields' => $this->getHiddenFieldsDotpay(),
-                'agreements' => $agreements,
-                'icon' => $this->_model->getPaymentDotpayImageUrl(),
-            ),
+                'icon' => $this->_model->getPaymentOneClickImageUrl(),
+                'text' => 'One-Click',
+                'text2' => "{$cardV['oneclick_card_title']}",
+            );
+            
+            $hiddenFields["oneclick_card_{$cardV['oneclick_id']}"] = $oneclick;
+        }
+        
+        /**
+         * One-Click Register
+         */
+        $hiddenFields['oneclick_register'] = array(
+            'active' => $this->_model->isDotpayOneClick(),
+            'fields' => $this->getHiddenFieldsMasterPass(),
+            'agreements' => $agreements,
+            'icon' => $this->_model->getPaymentOneClickImageUrl(),
+            'text' => 'One-Click',
+            'text2' => __('Card register'),
+        );
+        
+        /**
+         * MasterPass
+         */
+        $hiddenFields['mp'] = array(
+            'active' => $this->_model->isDotpayMasterPass(),
+            'fields' => $this->getHiddenFieldsMasterPass(),
+            'agreements' => $agreements,
+            'icon' => $this->_model->getPaymentMasterPassImageUrl(),
+            'text' => 'MasterPass (First Data Polska S.A.)',
+            'text2' => '',
+        );
+        
+        /**
+         * BLIK
+         */
+        $hiddenFields['blik'] = array(
+            'active' => $this->_model->isDotpayBlik(),
+            'fields' => $this->getHiddenFieldsBlik(),
+            'agreements' => $agreements,
+            'icon' => $this->_model->getPaymentBlikImageUrl(),
+            'text' => 'BLIK (Polski Standard Płatności Sp. z o.o.)',
+            'text2' => '',
+        );
+        
+        /**
+         * Dotpay
+         */
+        $hiddenFields['dotpay'] = array(
+            'active' => $this->_model->isDotpayWidget(),
+            'fields' => $this->getHiddenFieldsDotpay(),
+            'agreements' => $agreements,
+            'icon' => $this->_model->getPaymentDotpayImageUrl(),
+            'text' => '',
+            'text2' => '',
         );
 
         /**
@@ -108,13 +154,14 @@ class Widget extends Dotpay {
         /**
          * 
          */
-        if($this->_model->isDotpayMasterPass() || $this->_model->isDotpayBlik() || $this->_model->isDotpayWidget()) {
-            $txtP = __('You chose payment by Dotpay. Select a payment channel and click Continue do proceed', 'dotpay-payment-gateway');
+        if($this->_model->isDotpayOneClick() || $this->_model->isDotpayMasterPass() || $this->_model->isDotpayBlik() || $this->_model->isDotpayWidget()) {
+            $txtP = __('You chose payment by Dotpay. Select a payment channel and click Continue do proceed');
         } else {
-            $txtP = __('You chose payment by Dotpay. Click Continue do proceed', 'dotpay-payment-gateway');
+            $txtP = __('You chose payment by Dotpay. Click Continue do proceed');
         }
 
         $this->_coreRegistry->register('dataWidget', array(
+            'oneclick' => $this->_model->isDotpayOneClick(),
             'mp' => $this->_model->isDotpayMasterPass(),
             'blik' => $this->_model->isDotpayBlik(),
             'widget' => $this->_model->isDotpayWidget(),

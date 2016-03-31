@@ -50,6 +50,8 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
     protected $_tableOneClick = 'dotpay_oneclick';
     
     protected $_checkTableOneClick = false;
+    
+    protected $_customerId = null;
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -98,6 +100,22 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
         $this->getDBTablePrefix();
         $this->createTableOneClick();
         $this->_checkTableOneClick = $this->checkTableOneClick();
+    }
+    
+    /**
+     * 
+     */
+    public function setCustomerID($userId) {
+        if(!isset($this->_customerId)) {
+            $this->_customerId = (int) $userId;
+        }
+    }
+    
+    /**
+     * 
+     */
+    public function getCustomerID() {
+        return $this->_customerId;
     }
 
     /**
@@ -164,6 +182,17 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
      *
      * @return string
      */
+    public function getPaymentOneClickImageUrl()
+    {
+        $baseUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_STATIC);
+        return $baseUrl . 'frontend/Magento/luma/en_US/Dotpay_Dotpay/img/dotpay.png';
+    }
+    
+    /**
+     * Get Dotpay "MasterPass" image URL
+     *
+     * @return string
+     */
     public function getPaymentMasterPassImageUrl()
     {
         $baseUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_STATIC);
@@ -201,6 +230,22 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
         
         if (1 === (int) $this->getConfigData('test')) {
             $result = true;
+        }
+        
+        return $result;
+    }
+    
+    public function isDotpayOneClick() {
+        $result = false;
+        
+        if (1 === (int) $this->getConfigData('oneclick')) {
+            $result = true;
+        }
+        if(false === $this->_agreements) {
+            $result = false;
+        }
+        if(null === $this->getCustomerID() || 0 === $this->getCustomerID()) {
+            $result = false;
         }
         
         return $result;
@@ -371,13 +416,13 @@ END;
     /**
      * 
      */
-    public function cardList($user) {
+    public function cardList() {
         
         $sql = <<<END
             SELECT *
             FROM {$this->_tablePrefix}{$this->_tableOneClick}
             WHERE
-                oneclick_user = '{$user}'
+                oneclick_user = '{$this->getCustomerID()}'
                 AND
                 oneclick_card_id IS NOT NULL
             ;

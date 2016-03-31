@@ -61,6 +61,8 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
         $this->localeResolver = $localeResolver;
 
         parent::__construct($context);
+        
+        $this->_model->setCustomerID($this->_customerSession->getCustomerId());
     }
     
     /**
@@ -307,6 +309,38 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             $hiddenFields['ch_lock'] = 1;
             $hiddenFields['type'] = 4;
         }
+        
+        return $hiddenFields;
+    }
+    
+    private function getHiddenFieldsOneClick() {
+        $hiddenFields = $this->getHiddenFields();
+        
+        if($this->_model->isDotpayTest()) {
+            $hiddenFields['currency'] = 'EUR';
+        }
+        
+        $hiddenFields['channel'] = 248;
+        $hiddenFields['ch_lock'] = 1;
+        $hiddenFields['type'] = 4;
+        
+        return $hiddenFields;
+    }
+    
+    protected function getHiddenFieldsOneClickCard($credit_card_customer_id, $credit_card_id) {
+        $hiddenFields = $this->getHiddenFieldsOneClick();
+
+        $hiddenFields['credit_card_customer_id'] = $credit_card_customer_id;
+        $hiddenFields['credit_card_id'] = $credit_card_id;
+
+        return $hiddenFields;
+    }
+
+    protected function getHiddenFieldsOneClickRegister() {
+        $hiddenFields = $this->getHiddenFieldsOneClick();
+        
+        $hiddenFields['credit_card_store'] = 1;
+        $hiddenFields['credit_card_customer_id'] = 0;
         
         return $hiddenFields;
     }
