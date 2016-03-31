@@ -174,6 +174,7 @@ class Widget extends Dotpay {
             'action' => $this->getDotAction(),
             'hiddenFields' => $hiddenFields,
             'signatureUrl' => $this->getDotUrlSignature(),
+            'oneclickRegisterUrl' => $this->getDotUrlOneClickRegister(),
         ));
 
         /**

@@ -23,7 +23,6 @@ $dataWidget = $block->getDataWidget();
             display:none;
         }
         form[form-target] input[type="submit"] {
-            display:none;
             font-size: 24px;
         }
         img.mp {
@@ -325,7 +324,7 @@ $dataWidget = $block->getDataWidget();
                         cardtitle: $('form[form-target="' + target + '"] input[id="card_title"]').val()
                     };
 
-                    $.post('<?php echo $dataWidget['oneclick_register_url']; ?>', dataReg, function(result) {
+                    $.post('<?php echo $dataWidget['oneclickRegisterUrl']; ?>', dataReg, function(result) {
                         var data;
 
                         $('form[form-target="' + target + '"] input[name="credit_card_customer_id"]').val(result);

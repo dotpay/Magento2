@@ -176,6 +176,14 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * 
      * @return string
      */
+    protected function getDotUrlOneClickRegister() {
+        return "http://{$_SERVER['HTTP_HOST']}/dotpay/processing/oneclickregister";
+    }
+    
+    /**
+     * 
+     * @return string
+     */
     protected function getDotApiVersion() {
         return 'dev';
     }
