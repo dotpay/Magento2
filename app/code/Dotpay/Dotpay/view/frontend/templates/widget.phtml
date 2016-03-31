@@ -323,7 +323,7 @@ $dataWidget = $block->getDataWidget();
                 function oneClickRegister(target) {
                     var dataReg = {
                         cardtitle: $('form[form-target="' + target + '"] input[id="card_title"]').val()
-                    }
+                    };
 
                     $.post('<?php echo $dataWidget['oneclick_register_url']; ?>', dataReg, function(result) {
                         var data;
