@@ -25,6 +25,21 @@ $dataWidget = $block->getDataWidget();
         form[form-target] input[type="submit"] {
             font-size: 24px;
         }
+        p[display-row] {
+            display: table-row;
+        }
+        label[display-cell] {
+            display: table-cell;
+            line-height: 70px;
+        }
+        label[display-cell] input,
+        label[display-cell] img,
+        label[display-cell] span,
+        label[display-cell] strong
+        {
+           display: inline;
+           vertical-align: middle;
+        }
         img.mp {
             height: 60px;
         }
@@ -37,18 +52,6 @@ $dataWidget = $block->getDataWidget();
         label {
             cursor: pointer;
         }
-        label input[form-target="mp"]{
-            height: 60px;
-        }
-        label input[form-target="blik"]{
-            height: 35px;
-        }
-        label input[form-target="dotpay"]{
-            height: 19px;
-        }
-        label[form-target] {
-            line-height: 60px;
-        }
         .my-form-widget-container .dotpay-channels {
             float: left;
         }
@@ -57,7 +60,11 @@ $dataWidget = $block->getDataWidget();
         }
         input[name="blik_code"] {
             width:200px;
-            margin: 0px 0px 20px 0px;
+            margin: 20px 0px 20px 0px;
+        }
+        input[id="card_title"] {
+            width:300px;
+            margin: 20px 0px 20px 0px;
         }
     </style>
     
@@ -66,8 +73,8 @@ $dataWidget = $block->getDataWidget();
     <?php $countStrategy = 0; ?>
     <?php foreach($dataWidget['hiddenFields'] as $keyR => $valR) : ?>
         <?php if($valR['active'] || 'dotpay' === $keyR) : ?>
-            <p>
-                <label form-target="<?php echo $keyR; ?>">
+            <p display-row>
+                <label display-cell form-target="<?php echo $keyR; ?>">
                     <input type="radio" name="strategy" form-target="<?php echo $keyR; ?>">
                     <img class="<?php echo $keyR; ?>" src="<?php echo $valR['icon']; ?>">
                     <span><?php echo $valR['text']; ?></span>
