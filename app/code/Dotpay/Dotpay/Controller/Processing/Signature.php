@@ -54,6 +54,14 @@ class Signature extends Dotpay {
         $channel = $this->getRequest()->getParam('channel');
         
         switch ($type) {
+            case 'oneclick_card':
+                $cardHash = $this->getRequest()->getParam('cardhash');
+                $chk = $this->buildSignature4Request($type, $channel, null, $cardHash);
+                break;
+            case 'oneclick_register':
+                $cardHash = $this->getRequest()->getParam('cardhash');
+                $chk = $this->buildSignature4Request($type, $channel, null, $cardHash);
+                break;
             case 'mp':
                 $chk = $this->buildSignature4Request($type, $channel);
                 break;

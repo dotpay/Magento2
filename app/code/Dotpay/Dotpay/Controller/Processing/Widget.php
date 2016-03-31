@@ -82,7 +82,7 @@ class Widget extends Dotpay {
         foreach($cardList as $cardV) {
             $oneclick = array(
                 'active' => $this->_model->isDotpayOneClick(),
-                'fields' => $this->getHiddenFieldsOneClickRegister($cardV['oneclick_card_hash'], $cardV['oneclick_card_id']),
+                'fields' => $this->getHiddenFieldsOneClickCard($cardV['oneclick_card_hash'], $cardV['oneclick_card_id']),
                 'agreements' => $agreements,
                 'icon' => $this->_model->getPaymentOneClickImageUrl(),
                 'text' => 'One-Click',
@@ -97,7 +97,7 @@ class Widget extends Dotpay {
          */
         $hiddenFields['oneclick_register'] = array(
             'active' => $this->_model->isDotpayOneClick(),
-            'fields' => $this->getHiddenFieldsMasterPass(),
+            'fields' => $this->getHiddenFieldsOneClickRegister(),
             'agreements' => $agreements,
             'icon' => $this->_model->getPaymentOneClickImageUrl(),
             'text' => 'One-Click',
@@ -145,7 +145,14 @@ class Widget extends Dotpay {
          */
         if($this->_model->isDotpaySecurity()) {
             foreach($hiddenFields as $key => $val) {
-                $chk = $this->buildSignature4Request($key);
+                $oneclickCardTest = 'oneclick_card';
+                $keySubstr = substr($key, 0, strlen($oneclickCardTest));
+                
+                if($oneclickCardTest === $keySubstr) {
+                    $chk = $this->buildSignature4Request($oneclickCardTest, null, null, $val['fields']['credit_card_customer_id']);
+                } else {
+                    $chk = $this->buildSignature4Request($key);
+                }
 
                 $hiddenFields[$key]['fields']['chk'] = $chk;
             }

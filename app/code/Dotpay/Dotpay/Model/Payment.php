@@ -496,12 +496,12 @@ END;
     /**
      * 
      */
-    public function cardGetIdByCardHash($user, $cardHash) {
+    public function cardGetIdByCardHash($cardHash) {
         $sql = <<<END
             SELECT *
             FROM {$this->_tablePrefix}{$this->_tableOneClick}
             WHERE
-                oneclick_user = '{$user}'
+                oneclick_user = '{$this->getCustomerID()}'
                 AND
                 oneclick_card_hash = '{$cardHash}'
             LIMIT 1
@@ -513,6 +513,31 @@ END;
             if($this->_checkTableOneClick) {
                 $row = $this->_connection->fetchRow($sql);
                 $results = isset($row['oneclick_id']) ? $row['oneclick_id'] : null;
+            }
+            
+            return $results;
+    }
+    
+    /**
+     * 
+     */
+    public function cardGetCreditCardIdByCardHash($cardHash) {
+        $sql = <<<END
+            SELECT *
+            FROM {$this->_tablePrefix}{$this->_tableOneClick}
+            WHERE
+                oneclick_user = '{$this->getCustomerID()}'
+                AND
+                oneclick_card_hash = '{$cardHash}'
+            LIMIT 1
+            ;
+
+END;
+            
+            $results = null;
+            if($this->_checkTableOneClick) {
+                $row = $this->_connection->fetchRow($sql);
+                $results = isset($row['oneclick_card_id']) ? $row['oneclick_card_id'] : null;
             }
             
             return $results;

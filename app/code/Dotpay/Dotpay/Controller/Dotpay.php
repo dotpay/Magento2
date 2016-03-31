@@ -388,8 +388,15 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @param string $blik
      * @return string
      */
-    protected function buildSignature4Request($type, $channel = null, $blik = null) {
+    protected function buildSignature4Request($type, $channel = null, $blik = null, $creditCardCustomerId = null) {
         switch ($type) {
+            case 'oneclick_card':
+                $creditCardId = $this->_model->cardGetCreditCardIdByCardHash($creditCardCustomerId);
+                $hiddenFields = $this->getHiddenFieldsOneClickCard($creditCardCustomerId, $creditCardId);
+                break;
+            case 'oneclick_register':
+                $hiddenFields = $this->getHiddenFieldsOneClickRegister();
+                break;
             case 'mp':
                 $hiddenFields = $this->getHiddenFieldsMasterPass();
                 break;
@@ -432,10 +439,26 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             'p_info' => $hiddenFields['p_info'],
             'bylaw' => self::STR_EMPTY,
             'personal_data' => self::STR_EMPTY,
+            'credit_card_store' => isset($hiddenFields['credit_card_store']) ? $hiddenFields['credit_card_store'] : self::STR_EMPTY,
+            'credit_card_customer_id' => isset($hiddenFields['credit_card_customer_id']) ? $hiddenFields['credit_card_customer_id'] : self::STR_EMPTY,
+            'credit_card_id' => isset($hiddenFields['credit_card_id']) ? $hiddenFields['credit_card_id'] : self::STR_EMPTY,
             'blik_code' => self::STR_EMPTY
         );
         
-         if('mp' === $type && $this->_model->isDotpayMasterPass()) {
+        if('oneclick_card' === $type && $this->_model->isDotpayOneClick()) {
+            if(isset($channel)) {
+                $fieldsRequestArray['channel'] = $channel;
+            }
+            $fieldsRequestArray['bylaw'] = '1';
+            $fieldsRequestArray['personal_data'] = '1';
+        } elseif('oneclick_register' === $type && $this->_model->isDotpayOneClick()) {
+            if(isset($channel)) {
+                $fieldsRequestArray['channel'] = $channel;
+            }
+            if(isset($creditCardCustomerId)) {
+                $fieldsRequestArray['credit_card_customer_id'] = $creditCardCustomerId;
+            }
+        } elseif('mp' === $type && $this->_model->isDotpayMasterPass()) {
             if(isset($channel)) {
                 $fieldsRequestArray['channel'] = $channel;
             }
