@@ -458,7 +458,7 @@ END;
     /**
      * 
      */
-    public function cardAdd($orderId, $userId, $cardTitle) {
+    public function cardAdd($orderId, $cardTitle) {
         $result = 0;
         
         if($this->_checkTableOneClick) {
@@ -469,7 +469,7 @@ END;
                     "{$this->_tablePrefix}{$this->_tableOneClick}"
                     , array( 
                         'oneclick_order' => "{$orderId}"
-                        ,'oneclick_user' => "{$userId}"
+                        ,'oneclick_user' => "{$this->getCustomerID()}"
                         ,'oneclick_card_title' => "{$cardTitle}" 
                         ,'oneclick_card_hash' => "{$cardHash}" 
                     )
@@ -546,12 +546,12 @@ END;
     /**
      * 
      */
-    public function cardGetHashByOrderId($user, $orderId) {
+    public function cardGetHashByOrderId($orderId) {
         $sql = <<<END
             SELECT *
             FROM {$this->_tablePrefix}{$this->_tableOneClick}
             WHERE
-                oneclick_user = '{$user}'
+                oneclick_user = '{$this->getCustomerID()}'
                 AND
                 oneclick_order = '{$orderId}'
             LIMIT 1

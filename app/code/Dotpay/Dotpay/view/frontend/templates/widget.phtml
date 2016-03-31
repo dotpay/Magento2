@@ -145,6 +145,8 @@ $dataWidget = $block->getDataWidget();
             var isBlik = Boolean('<?php echo $dataWidget['blik'] ?>');
             var isWidget = Boolean('<?php echo $dataWidget['widget'] ?>');
             
+            var oneClickRegisterDisableFirstSubmit = true;
+            
             $(document).ready(function() {
                 $('form[form-target]').hide();
                 $('form[form-target="' + $(this).attr('form-target') +'"] input[type="submit"]').attr('disabled', true);

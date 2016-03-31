@@ -161,7 +161,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @return string
      */
     protected function getDotUrlC() {
-        return "http://{$_SERVER['HTTP_HOST']}/dotpay/notification/response";
+        return "https://{$_SERVER['HTTP_HOST']}/dotpay/notification/response";
     }
     
     /**
