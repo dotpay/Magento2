@@ -360,7 +360,12 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     protected function getHiddenFieldsMasterPass() {
         $hiddenFields = $this->getHiddenFields();
         
-        $hiddenFields['channel'] = 71;
+        if($this->_model->isDotpayTest()) {
+            $hiddenFields['channel'] = 245;
+        } else {
+            $hiddenFields['channel'] = 71;
+        }
+        
         $hiddenFields['ch_lock'] = 1;
         $hiddenFields['type'] = 4;
         
