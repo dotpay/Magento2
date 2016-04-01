@@ -171,6 +171,7 @@ class Widget extends Dotpay {
             'oneclick' => $this->_model->isDotpayOneClick(),
             'oneclickTxtValid' => __('6 or more characters'),
             'oneclickTxtPlaceholder' => __('Card title 6 or more characters'),
+            'oneclickTxtSaveCard' => __('Remember your data card (Your card details are safely stored in Dotpay. There will be no need for them to enter the next payment in the store.)'),
             'mp' => $this->_model->isDotpayMasterPass(),
             'blik' => $this->_model->isDotpayBlik(),
             'blikTxtValid' => __('Only 6 digits'),
