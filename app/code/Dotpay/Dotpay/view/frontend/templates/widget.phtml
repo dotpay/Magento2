@@ -183,106 +183,6 @@ $dataWidget = $block->getDataWidget();
                         }
                     }
                 });
-                
-                /*
-                $('body').on('click', 'input[name="strategy"]', function(){
-                    $('form[form-target]').hide();
-                    $('form[form-target="' + $(this).attr('form-target') +'"] input[type="submit"]').attr('disabled', true);
-
-                    $(this).each(function(key, val){
-                        var checked = $(val).is(':checked');
-                        var target = $(val).attr('form-target');
-
-                        var oneClickCardSubstr = getOneClickCardStr();
-                        var targetSubstr = getOneClickCardSubstr(target);
-
-                        var data = {};
-
-                        if(oneClickCardSubstr === targetSubstr) {
-                            data.type = oneClickCardSubstr;
-                            data.channel = $('form[form-target="' + target + '"] input[name="channel"]').val();
-                            data.cardhash = $('form[form-target="' + target + '"] input[name="credit_card_customer_id"]').val();
-
-                            if(data.channel && data.cardhash) {
-                                $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                                    $('form[form-target="' + target + '"] input[name="chk"]').val(result);
-                                    submitHideShow(target);
-                                });
-                            }
-                        } else if('oneclick_register' === target) {
-                            submitHideShow(target);
-                        } else if('mp' === target) {
-                            data.type = target;
-                            data.channel = $('form[form-target="' + target + '"] input[name="channel"]').val();
-
-                            if(data.channel) {
-                                $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                                    $('form[form-target="' + target + '"] input[name="chk"]').val(result);
-                                    submitHideShow(target);
-                                });
-                            }
-                        } else if('blik' === target) {
-                            data.type = target;
-                            data.channel = $('form[form-target="' + target + '"] input[name="channel"]').val();
-                            data.blik = $('form[form-target="' + target + '"] input[name="blik_code"]').val();
-
-                            if(data.channel && data.blik) {
-                                $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                                    $('form[form-target="' + target + '"] input[name="chk"]').val(result);
-                                    submitHideShow(target);
-                                });
-                            }
-                        } else if('dotpay' === target) {
-                            if(isWidget){
-                                data.type = target;
-                                data.widget = isWidget;
-
-                                $('form[form-target="' + target + '"] input[name="channel"]').each(function(key, val){
-                                    var channel = $(val).is(':checked');
-                                    var online = !$(val).parent().parent().hasClass('not-online');
-                                    if(channel && online) {
-                                        data.channel = $(val).val();
-                                        return false;
-                                    }
-                                });
-
-                                if(data.channel) {
-                                    $.post('<?php echo $dataWidget['signatureUrl']; ?>', data, function(result) {
-                                        $('form[form-target="' + target + '"] input[name="chk"]').val(result);
-                                        submitHideShow(target);
-                                    });
-                                }
-                            } else {
-                                submitHideShow(target);
-                            }
-                        }
-
-                        if(checked) {
-                           $('form[form-target="' + target + '"]').show();
-                        }
-                    });
-                });
-                */
-                
-                /*
-                $('body').on('change', 'input[name="bylaw"]', function() {
-                    $('form[form-target="' + $(this).attr('form-target') + '"] input[type="submit"]').attr('disabled', true);
-                    submitHideShow($(this).attr('form-target'));
-                });
-
-                $('body').on('change', 'input[name="personal_data"]', function() {
-                    $('form[form-target="' + $(this).attr('form-target') + '"] input[type="submit"]').attr('disabled', true);
-                    submitHideShow($(this).attr('form-target'));
-                });
-
-                $('body').on('input', 'input[id="card_title"]', function(){
-                    var target = $(this).attr('form-target');
-
-                    $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', true);
-
-                    submitHideShow(target);
-                });
-                */
 
                 $('body').on('input', 'input[name="blik_code"]', function(){
                     var target = $(this).attr('form-target');
@@ -345,32 +245,6 @@ $dataWidget = $block->getDataWidget();
                     return ok;
                 });
                 
-                /*
-                $('body').on('submit', 'form[form-target]', function(){
-                    var ok = true;
-
-                    var target = $(this).attr('form-target');
-
-                    $('input[type="text"]', this).each(function(key, val){
-                        if(!val.validity.valid) {
-                            ok = false;
-                            return false;
-                        }
-                    });
-
-                    if('oneclick_register' === target && oneClickRegisterDisableFirstSubmit) {
-                        ok = false;
-                        formSubmitWait();
-                        oneClickRegister(target);
-                    }
-
-                    if(ok && 'oneclick_register' !== target) {
-                        formSubmitWait();
-                    }
-
-                    return ok;
-                });
-                */
                 function strategyOneClickCard(target) {
                     var data = {
                         type: getOneClickCardStr(),
@@ -483,58 +357,7 @@ $dataWidget = $block->getDataWidget();
                         });
                     }
                 }
-                /*
-                function submitHideShow(target) {
-                    var result = false;
-
-                    var checkBylaw = false;
-                    var checkPersonalData = false;
-                    var checkBlikCode = false;
-                    var checkCardTitle = false;
-
-                    if(target) {
-                        checkBylaw = $('form[form-target="' + target + '"] input[name="bylaw"]').is(':checked');
-                        checkPersonalData = $('form[form-target="' + target + '"] input[name="personal_data"]').is(':checked')
-                        $('form[form-target="' + target + '"] input[name="blik_code"]').each(function(key, val){
-                            if(val.validity.valid) {
-                                checkBlikCode = true;
-                                return false;
-                            }
-                        });
-                        $('form[form-target="' + target + '"] input[id="card_title"]').each(function(key, val){
-                            if(val.validity.valid) {
-                                checkCardTitle = true;
-                                return false;
-                            }
-                        });
-                    }
-
-                    var oneClickCardSubstr = getOneClickCardStr();
-                    var targetSubstr = getOneClickCardSubstr(target);
-
-                    if(oneClickCardSubstr === targetSubstr && checkBylaw && checkPersonalData) {
-                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', false);
-                        result = true;
-                    } else if('oneclick_register' === target && checkCardTitle) {
-                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', false);
-                        result = true;
-                    } else if('mp' === target && checkBylaw && checkPersonalData) {
-                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', false);
-                        result = true;
-                    } else if('blik' === target && checkBlikCode && checkBylaw && checkPersonalData) {
-                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', false);
-                        result = true;
-                    } else if('dotpay' === target && checkBylaw && checkPersonalData) {
-                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', false);
-                        result = true;
-                    } else if('dotpay' === target && (isOneClick || isMasterPass || isBlik) && !isWidget) {
-                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', false);
-                        result = true;
-                    }
-
-                    return result;
-                }
-                */
+                
                 function getOneClickCardStr() {
                     return 'oneclick_card';
                 }

@@ -41,15 +41,15 @@
                 <field id="widget" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Widget</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>list channels on the shop</comment>
+                    <comment>Display payment channels in a shop</comment>
                 </field>
                 <field id="security" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Security</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>protect data sent</comment>
+                    <comment>Protect data sent</comment>
                 </field>
                 <field id="test" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Test</label>
+                    <label>Testing environment</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
