@@ -8,6 +8,15 @@ namespace Dotpay\Dotpay\Controller;
 
 abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     
+    // Force protocol HTTPS for Dotpay response
+    const FORCE_HTTPS_DOTPAY_RESPONSE = true;
+    
+    // Check Real IP if server is proxy, balancer...
+    const CHECK_REAL_IP = false;
+    
+    // Local IP address
+    const LOCAL_IP = '127.0.0.1';
+    
     // STR EMPTY
     const STR_EMPTY = '';
     
@@ -148,12 +157,22 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
         return strtolower($lang);
     }
     
+    protected function getServerProtocol() {
+        $result = 'http';
+        
+        if(isset($_SERVER['HTTPS'])) {
+            $result = 'https';
+        }
+        
+        return $result;
+    }
+    
     /**
      * 
      * @return string
      */
     protected function getDotUrl() {
-        return "http://{$_SERVER['HTTP_HOST']}/dotpay/processing/back";
+        return "{$this->getServerProtocol()}://{$_SERVER['HTTP_HOST']}/dotpay/processing/back";
     }
     
     /**
@@ -161,7 +180,12 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @return string
      */
     protected function getDotUrlC() {
-        return "https://{$_SERVER['HTTP_HOST']}/dotpay/notification/response";
+        $protocol = 'http';
+        
+        if(self::FORCE_HTTPS_DOTPAY_RESPONSE) {
+            $protocol = 'https';
+        }
+        return "{$protocol}://{$_SERVER['HTTP_HOST']}/dotpay/notification/response";
     }
     
     /**
@@ -169,7 +193,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @return string
      */
     protected function getDotUrlSignature() {
-        return "http://{$_SERVER['HTTP_HOST']}/dotpay/processing/signature";
+        return "{$this->getServerProtocol()}://{$_SERVER['HTTP_HOST']}/dotpay/processing/signature";
     }
     
     /**
@@ -177,7 +201,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @return string
      */
     protected function getDotUrlOneClickRegister() {
-        return "http://{$_SERVER['HTTP_HOST']}/dotpay/processing/oneclickregister";
+        return "{$this->getServerProtocol()}://{$_SERVER['HTTP_HOST']}/dotpay/processing/oneclickregister";
     }
     
     /**
