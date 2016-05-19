@@ -61,12 +61,7 @@ class SellerApi {
              ->addOption(CURLOPT_FOLLOWLOCATION, 1)
              ->addOption(CURLOPT_RETURNTRANSFER, 1)
              ->addOption(CURLOPT_TIMEOUT, 100)
-             ->addOption(CURLOPT_CUSTOMREQUEST, "GET")
-             //proxy:
-             ->addOption(CURLOPT_PROXYTYPE, "HTTP")
-             ->addOption(CURLOPT_PROXY, "10.148.8.34")
-             ->addOption(CURLOPT_PROXYPORT, "8080");
-        if(!empty($this->_cainfo))
-            $curl->addCaInfo($this->_cainfo);
-    }
+             ->addOption(CURLOPT_CUSTOMREQUEST, "GET");
+    }		
+			
 }
