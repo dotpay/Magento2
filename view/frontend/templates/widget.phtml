@@ -1,0 +1,399 @@
+<?php
+/**
+ * Dotpay widget template
+ */
+// @codingStandardsIgnoreFile
+/**
+ * @var \Dotpay\Dotpay\Block\Widget $block
+ */
+/**
+ * @var array
+ */
+$dataWidget = $block->getDataWidget();
+?>
+<div>
+    <style type="text/css" scoped>
+        form[form-target] {
+            display:none;
+        }
+        form[form-target] input[type="submit"] {
+            font-size: 24px;
+        }
+        p[display-row] {
+            display: table-row;
+            height: 70px;
+            line-height: 70px;
+        }
+        label[display-cell] {
+            display: table-cell;
+            height: inherit;
+            line-height: inherit;
+        }
+        label[display-cell] input,
+        label[display-cell] img,
+        label[display-cell] span,
+        label[display-cell] strong
+        {
+            display: inline;
+            vertical-align: middle;
+        }
+	img.oneclick {
+            height: 60px;
+        }
+        img.mp {
+            height: 60px;
+        }
+        img.blik {
+            height: 30px;
+        }
+        img.dotpay {
+            height: 19px;
+        }
+        label {
+            cursor: pointer;
+        }
+        .my-form-widget-container .dotpay-channels {
+            float: left;
+        }
+        .my-form-widget-container + p {
+            clear: both;
+        }
+        input[name="blik_code"] {
+            width:200px;
+            margin: 20px 0px 20px 0px;
+        }
+        input[id="card_title"],select[id="card_select"] {
+            width:300px;
+            margin: 20px 0px 20px 0px;
+        }
+
+        #oneclick-main, #oneclick-card-logo {
+            display: inline;
+        }
+        #oneclick-main {
+
+        }
+        .oneclick-strategy {
+            margin-left: 25px;
+        }
+        #oneclick-card-logo {
+            width: 200px;
+            height: 100px;
+        }
+    </style>
+
+    <p><?php echo $dataWidget['txtP']; ?></p>
+
+<?php $countStrategy = 0; ?>
+<?php foreach ($dataWidget['hiddenFields'] as $keyR => $valR) : ?>
+        <?php if ($valR['active'] || 'dotpay' === $keyR) : ?>
+            <p display-row>
+                <label display-cell form-target="<?php echo $keyR; ?>">
+                    <input type="radio" name="strategy" form-target="<?php echo $keyR; ?>">
+                    <img class="<?php echo $keyR; ?>" src="<?php echo $valR['icon']; ?>">
+                    <span><?php echo $valR['text']; ?></span>
+                </label>
+            </p>
+            <form form-target="<?php echo $keyR; ?>" method="post" action="<?php echo $valR['action']; ?>">
+        <?php if ('dotpay' === $keyR && $dataWidget['widget']) : ?>
+                    <link href="<?php echo $valR['action']; ?>widget/payment_widget.min.css" rel="stylesheet">
+                    <script type="text/javascript">
+                        var dotpayWidgetConfig = {
+                            sellerAccountId: '<?php echo $valR['fields']['id']; ?>',
+                            amount: '<?php echo $valR['fields']['amount']; ?>',
+                            currency: '<?php echo $valR['fields']['currency']; ?>',
+                            lang: '<?php echo $valR['fields']['lang']; ?>',
+                            widgetFormContainerClass: 'my-form-widget-container',
+                            offlineChannel: 'mark',
+                            offlineChannelTooltip: true
+                        };
+                    </script>
+                    <script type="text/javascript" id="dotpay-payment-script" src="<?php echo $valR['action']; ?>widget/payment_widget.js"></script>
+        <?php endif; ?>
+
+                <?php foreach ($valR['fields'] as $keyF => $valF) : ?>
+                    <input type="hidden" value="<?php echo $valF; ?>" name="<?php echo $keyF; ?>">
+                <?php endforeach; ?>
+
+                <?php if ('dotpay' === $keyR && $dataWidget['widget']) : ?>
+                    <p class="my-form-widget-container"></p>
+                <?php endif; ?>
+
+                <?php if ('oneclick' === $keyR) : ?>
+                    <div id="oneclick-main">
+                        <div class="oneclick-strategy">
+                            <label for="oneclick_select_card">
+                                <input type="radio" name="card_case" id="oneclick_select_card" value="select" />
+                                <?php echo $valR['selectText']; ?> (<a href="<?php echo $valR['manageUrl']; ?>">Zarzadzaj kartami</a>)
+                            </label><br />
+                            <select class="onclick-strategy-option" id="card_select" name="card_select" form-target="<?php echo $keyR; ?>">
+                                <?php foreach ($valR['cards'] as $card) : ?>
+                                    <option value="<?php echo $card['oneclick_id']; ?>"><?php echo $card['oneclick_card_mask']; ?> (<?php echo $card['oneclick_card_brand']; ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="oneclick-strategy">
+                            <label for="oneclick_register_card">
+                                <input type="radio" name="card_case" id="oneclick_register_card" value="register" />
+                                <?php echo $valR['registerText']; ?>
+                            </label>
+                        </div><br />
+                    </div>
+                    <p>
+                        <label>
+                            <input id="acceptSaveCard" type="checkbox" value="1" checked required>
+                            <span><?php echo $dataWidget['oneclickTxtSaveCard']; ?></span>
+                        </label>
+                    </p>
+                <?php endif; ?>
+
+                <?php if ('blik' === $keyR) : ?>
+                    <input form-target="<?php echo $keyR; ?>" type="text" value="" name="blik_code" autofocus required pattern="[0-9]{6}" title="<?php echo $dataWidget['blikTxtValid']; ?>" placeholder="<?php echo $dataWidget['blikTxtPlaceholder']; ?>">
+                <?php endif; ?>
+
+                <?php if (('dotpay' !== $keyR) || ('dotpay' === $keyR && $dataWidget['widget'])) : ?>
+                    <?php foreach ($valR['agreements'] as $keyA => $valA) : ?>
+                        <p>
+                            <label>
+                                <input form-target="<?php echo $keyR; ?>" type="checkbox" name="<?php echo $keyA; ?>" value="1" checked required>
+                <?php echo $valA; ?>
+                            </label>
+                        </p>
+                            <?php endforeach; ?>
+        <?php endif; ?>
+
+                <p>
+                    <input form-target="<?php echo $keyR; ?>" class="button" type="submit" value="<?php echo $dataWidget['txtSubmit']; ?>" disabled>
+                </p>
+            </form>
+
+        <?php if ($valR !== end($dataWidget['hiddenFields'])) : ?>
+                <hr>
+            <?php endif; ?>
+
+            <?php $countStrategy++; ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+
+    <script type="text/javascript">
+            require(['jquery'], function ($) {
+                (function($) {
+                    $.fn.goTo = function() {
+                        $('html, body').animate({
+                            scrollTop: $(this).offset().top + 'px'
+                        }, 'fast');
+                        return this;
+                    }
+                })(jQuery);
+                
+                var isOneClick = Boolean('<?php echo $dataWidget['oneclick'] ?>');
+                var isMasterPass = Boolean('<?php echo $dataWidget['mp'] ?>');
+                var isBlik = Boolean('<?php echo $dataWidget['blik'] ?>');
+                var isWidget = Boolean('<?php echo $dataWidget['widget'] ?>');
+
+                var urlSignature = '<?php echo $dataWidget['signatureUrl']; ?>';
+
+                $(document).ready(function () {
+                    strategyDefault();
+
+                    $('body').on('click', 'input[name="strategy"]', function () {
+                        var target;
+
+                        $('form[form-target]').hide();
+                        $('form[form-target] input[type="submit"]').attr('disabled', true);
+
+                        target = $(this).attr('form-target');
+
+                        if ('oneclick' === target) {
+                            strategyOneClick(target);
+                        } else if ('mp' === target) {
+                            strategyMasterPass(target);
+                        } else if ('blik' === target) {
+                            strategyBlik(target);
+                        } else if ('dotpay' === target) {
+                            if (isWidget) {
+                                strategyWidget(target);
+                            } else {
+                                strategyNotWidget(target);
+                            }
+                        }
+                    });
+
+                    $('body').on('input', 'input[name="blik_code"]', function () {
+                        var target = $(this).attr('form-target');
+                        var data = {
+                            type: target,
+                            channel: $('form[form-target="' + target + '"] input[name="channel"]').val(),
+                            blik: $(this).val()
+                        };
+
+                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', true);
+
+                        getCHK(data);
+                    });
+
+                    $('body').on('click', '.channel-container', function () {
+                        var target = 'dotpay';
+                        var data = {
+                            type: target,
+                            widget: isWidget
+                        };
+
+                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', true);
+
+                        $('input[name="channel"]', this).each(function (key, val) {
+                            var channel = $(val).is(':checked');
+                            var online = !$(val).parent().parent().hasClass('not-online');
+
+                            if (channel && online) {
+                                data.channel = $(val).val();
+                                return false;
+                            }
+                        });
+
+                        getCHK(data);
+                    });
+
+                    $('body').on('click', 'form[form-target] input[type="submit"]', function () {
+                        var ok = true;
+                        var checkValid = true;
+
+                        var target = $(this).attr('form-target');
+
+                        $('form[form-target="' + target + '"] input[required]').each(function (key, val) {
+                            if (!val.validity.valid) {
+                                checkValid = false;
+                                return false;
+                            }
+                        });
+
+                        return ok;
+                    });
+
+                    /* OneClick begin */
+                    $('input[name="card_case"]').not("[disabled=true]").click(function () {
+                        $(this).parents('form').find('input[type="submit"]').attr('disabled', false);
+                        if($('#oneclick_register_card').prop('checked')===true)
+                            $('#acceptSaveCard').parent().show();
+                        else
+                            $('#acceptSaveCard').prop('checked',true).parent().hide();
+                    });
+
+                    $('input[name="card_case"]').prop("checked", false);
+                    $('#acceptSaveCard').parent().hide();
+
+                    /* Oneclick end */
+                    
+                    if($('input[name="strategy"]').length == 1)
+                        $('input[name="strategy"]').click();
+
+                    function strategyOneClickCard(target) {
+                        var data = {
+                            type: getOneClickCardStr(),
+                            channel: $('form[form-target="' + target + '"] input[name="channel"]').val(),
+                            cardhash: $('form[form-target="' + target + '"] input[name="credit_card_customer_id"]').val()
+                        };
+
+                        $('form[form-target="' + target + '"]').show();
+
+                        if (data.channel && data.cardhash) {
+                            $.post(urlSignature, data, function (result) {
+                                $('form[form-target="' + target + '"] input[name="chk"]').val(result);
+                                $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', false);
+                            });
+                        }
+                    }
+
+                    function strategyDefault() {
+                        $('form[form-target]').hide();
+                        $('form[form-target] input[type="submit"]').attr('disabled', true).goTo();
+
+                        if (!isOneClick && !isMasterPass && !isBlik && !isWidget) {
+                            $('form[form-target="dotpay"]').show();
+                            $('form[form-target="dotpay"] input[type="submit"]').attr('disabled', false);
+                        }
+                    }
+
+                    function strategyOneClick(target) {
+                        $('form[form-target="' + target + '"]').show();
+                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', true).goTo();
+                        $('input[name="card_case"]').prop('checked', false);
+                        if (!$('#card_select option').length) {
+                            $('.oneclick-strategy:first').css('display', 'none');
+                        }
+                    }
+
+                    function strategyMasterPass(target) {
+                        var data = {
+                            type: target,
+                            channel: $('form[form-target="' + target + '"] input[name="channel"]').val()
+                        };
+
+                        $('form[form-target="' + target + '"]').show();
+
+                        getCHK(data);
+                    }
+
+                    function strategyBlik(target) {
+                        var data = {
+                            type: target,
+                            channel: $('form[form-target="' + target + '"] input[name="channel"]').val(),
+                            blik: $('form[form-target="' + target + '"] input[name="blik_code"]').val()
+                        };
+
+                        $('form[form-target="' + target + '"]').show();
+
+                        getCHK(data);
+                    }
+
+                    function strategyWidget(target) {
+                        var data = {
+                            type: target,
+                            widget: isWidget
+                        };
+
+                        $('form[form-target="' + target + '"]').show();
+
+                        $('form[form-target="' + target + '"] input[name="channel"]').each(function (key, val) {
+                            var channel = $(val).is(':checked');
+                            var online = !$(val).parent().parent().hasClass('not-online');
+                            if (channel && online) {
+                                data.channel = $(val).val();
+                                return false;
+                            }
+                        });
+
+                        getCHK(data);
+                    }
+
+                    function strategyNotWidget(target) {
+                        $('form[form-target="' + target + '"]').show();
+                        $('form[form-target="' + target + '"] input[type="submit"]').attr('disabled', false).goTo();
+                    }
+
+                    function getCHK(data) {
+                        if (data.channel) {
+                            $.post(urlSignature, data, function (result) {
+                                $('form[form-target="' + data.type + '"] input[name="chk"]').val(result);
+                                $('form[form-target="' + data.type + '"] input[type="submit"]').attr('disabled', false).goTo();
+                            });
+                        }
+                    }
+
+                    function getOneClickCardStr() {
+                        return 'oneclick_card';
+                    }
+
+                    function getOneClickCardSubstr(target) {
+                        return target.substr(0, getOneClickCardStr().length);
+                    }
+
+                    function formSubmitWait() {
+                        $('body').css('cursor', 'wait');
+                    }
+                });
+            });
+
+
+    </script>
+</div>

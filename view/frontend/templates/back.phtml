@@ -1,0 +1,27 @@
+<?php
+/**
+ * Dotpay back page template
+ */
+
+/**
+ * @var string
+ */
+$data = $block->getDataWidget();
+
+?>
+<div>
+    <style type="text/css" scoped>
+        
+    </style>
+    <h1 class="page-title">
+        <span class="base" data-ui-id="page-title-wrapper"><?php echo $data['siteTitle']; ?></span>
+    </h1>
+    <p class="errorMessage"><?php echo $data['errorMessage']; ?></p>
+    <p><?php echo $data['order']; ?></p>
+    <a href="<?php echo $data['backUrl'];?>">
+        <?php echo $data['textInUrl']; ?>
+    </a>
+    <script type="text/javascript">
+        
+    </script>
+</div>

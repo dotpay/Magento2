@@ -1,0 +1,111 @@
+<?php
+/**
+ * Dotpay back page template
+ */
+
+/**
+ * @var string
+ */
+$data = $block->getDataWidget();
+?>
+<div>
+    <style type="text/css" scoped>
+        .modal {
+            display: none;
+        }
+    </style>
+    <h1 class="page-title">
+        <span class="base" data-ui-id="page-title-wrapper"><?php echo $data['title']; ?></span>
+    </h1>
+    <table>
+        <tr>
+            <th><?php echo $data['numberTxt']; ?></th>
+            <th><?php echo $data['brandTxt']; ?></th>
+            <th><?php echo $data['removeTxt']; ?></th>
+        </tr>
+        <?php foreach($data['cards'] as $card) : ?>
+            <tr>
+                <td><?php echo $card['oneclick_card_mask']; ?></td>
+                <td><?php echo $card['oneclick_card_brand']; ?></td>
+                <td><input data-id="<?php echo $card['oneclick_id']; ?>" class="remove-card" type="button" value="X" title="<?php echo $data['removeTxtCard']; ?>" /></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+    <div id="popup-mpdal1" class="modal">
+        <h3><?php echo $data['removeQuestion']; ?> <span id="card-number-confirm"></span></h3>
+    </div>
+    <div id="popup-mpdal2" class="modal">
+        <h2><?php echo $data['errorMsg']; ?></h2>
+    </div>
+    <script type="text/javascript">
+        var urlOneClickRemove = '<?php echo $data['urlRemove']; ?>';
+        require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function(
+            $,
+            modal
+        ) {
+            var clicked;
+            var modalOptions1 = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: '<?php echo $data['confirmTxtTitle']; ?>',
+                buttons: [{
+                    text: '<?php echo $data['cancelTxt']; ?>',
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                },{
+                    text: '<?php echo $data['confirmTxt']; ?>',
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                        removeCard($(clicked).data('id'));
+                    }
+                    
+                }]
+            };
+            
+            var modalOptions2 = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: '<?php echo $data['errorTxt']; ?>',
+                buttons: [{
+                    text: "Ok",
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            }
+
+            var popup = modal(modalOptions1, $('#popup-mpdal1'));
+            var popup = modal(modalOptions2, $('#popup-mpdal2'));
+            $('.remove-card').click(function(){
+                clicked = this;
+                $('#card-number-confirm').html($(clicked).parent().parent().find('td:first').html());
+                $('#popup-mpdal1').modal('openModal');
+            });
+            
+            function removeCard(id) {
+                var data = {
+                    cardId:id
+                };
+                var res = false;
+                $.post(urlOneClickRemove, data, function(result) {
+                    if(result==='OK')
+                        location.href=location.href;
+                    else
+                        $('#popup-mpdal2').modal('openModal');
+                });
+                return res;
+            }
+        }
+    );
+    </script>
+</div>

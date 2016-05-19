@@ -1,0 +1,31 @@
+<?php
+/**
+ * Dotpay back page template
+ */
+
+/**
+ * @var string
+ */
+$data = $block->getDataWidget();
+?>
+<div>
+    <style type="text/css" scoped>
+        
+    </style>
+    <h1 class="page-title">
+        <span class="base" data-ui-id="page-title-wrapper"><?php echo __('Payment is preparing...'); ?></span>
+    </h1>
+    <form id="dotpay-oneclick-form" method="post" action="<?php echo $data['action']; ?>">
+        <?php foreach($data['hiddenFields'] as $keyF => $valF) : ?>
+            <input type="hidden" value="<?php echo $valF; ?>" name="<?php echo $keyF; ?>">
+        <?php endforeach; ?>
+    </form>
+    <script type="text/javascript">
+        require(['jquery'], function($) {
+            $(document).ready(function(){
+                $("body").css("cursor", "progress");
+                $("#dotpay-oneclick-form").submit();
+            });
+        });
+    </script>
+</div>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Dotpay page types
+ */
+-->
+<page_types xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_types.xsd">
+    <type id="dotpay_processing_widget" label="Dotpay Widget"/>
+</page_types>
+
+<page_types xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_types.xsd">
+    <type id="dotpay_processing_back" label="Dotpay Back"/>
+</page_types>
+
+<page_types xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_types.xsd">
+    <type id="dotpay_oneclick_preparing" label="Dotpay OneClick Preparing"/>
+</page_types>
+
+<page_types xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_types.xsd">
+    <type id="dotpay_oneclick_manage" label="Dotpay OneClick Card Manage"/>
+</page_types>
