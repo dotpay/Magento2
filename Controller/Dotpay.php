@@ -9,7 +9,7 @@ namespace Dotpay\Dotpay\Controller;
 abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     
     // Force protocol HTTPS for Dotpay response
-    const FORCE_HTTPS_DOTPAY_RESPONSE = true;
+    const FORCE_HTTPS_DOTPAY_RESPONSE = false;
     
     // Check Real IP if server is proxy, balancer...
     const CHECK_REAL_IP = false;
@@ -227,12 +227,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @return string
      */
     protected function getDotUrlC() {
-        $protocol = 'http';
-        
-        if(self::FORCE_HTTPS_DOTPAY_RESPONSE) {
-            $protocol = 'https';
-        }
-        return "{$protocol}://{$_SERVER['HTTP_HOST']}/dotpay/notification/response";
+		return "{$this->getServerProtocol()}://{$_SERVER['HTTP_HOST']}/dotpay/notification/response";
     }
     
     /**
