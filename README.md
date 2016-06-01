@@ -1,5 +1,4 @@
 # Magento-2.0
-Magento 2.0
 
 - wtyczka w fazie testów
 - instrukcja instalacji w przygotowaniu
@@ -30,3 +29,30 @@ Z menu wtyczki należy wybrać opcję
 Enable
 ```
 a nastepnie przejść wszystkie kroki kreatora.
+
+## 1. Installation
+Plugin can be installed in two ways:
+
+a) using composer: when inside Magento2 root folder enter in system command prompt:
+```
+composer require dotpay/dotpay dev-master
+```
+
+b) copy plugin files to:
+```
+app/code/Dotpay/Dotpay
+```
+(if it's not present create it).
+
+## 2. Activation
+Before using plugin has to be activated in Magento2 administration panel:
+
+```
+System > Web Setup Wizard > Component Manager
+```
+
+In plugin configuration select
+```
+Enable
+```
+and follow installation wizard.

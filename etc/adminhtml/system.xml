@@ -51,11 +51,6 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Display payment channels in a shop</comment>
                 </field>
-                <field id="security" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Security</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Protect data sent</comment>
-                </field>
                 <field id="test" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Testing environment</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

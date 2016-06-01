@@ -264,20 +264,6 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
 
     /**
      * 
-     * @return boolean
-     */
-    public function isDotpaySecurity() {
-        $result = false;
-
-        if (1 === (int) $this->getConfigData('security')) {
-            $result = true;
-        }
-
-        return $result;
-    }
-
-    /**
-     * 
      */
     public function disableAgreements() {
         $this->_agreements = false;

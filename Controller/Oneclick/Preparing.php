@@ -62,10 +62,8 @@ class Preparing extends Dotpay {
             $ccData = $this->_model->cardGetDataByOneclickId($card);
             $hiddenFields = $this->getHiddenFieldsOneClickCard($ccData['oneclick_card_hash'], $ccData['oneclick_card_id']);
         }
-        if($this->_model->isDotpaySecurity()) {
-            $type = ($case=='register')?'_register':'';
-            $hiddenFields['chk'] = $this->buildSignature4Request('oneclick'.$type, null, null, empty($hiddenFields['credit_card_customer_id'])?null:$hiddenFields['credit_card_customer_id']);
-        }
+        $type = ($case=='register')?'_register':'';
+        $hiddenFields['chk'] = $this->buildSignature4Request('oneclick'.$type, null, null, empty($hiddenFields['credit_card_customer_id'])?null:$hiddenFields['credit_card_customer_id']);
         $this->_coreRegistry->register('dataWidget', array(
             'hiddenFields' => $hiddenFields,
             'action' => $this->getDotAction()

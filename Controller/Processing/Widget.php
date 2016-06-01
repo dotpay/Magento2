@@ -82,12 +82,13 @@ class Widget extends Dotpay {
          */
         if($this->_model->isDotpayOneClick())
         {
-            $agreements['oneclick'] = $this->_model->getConfigData('oneclick_agreement');
+            $ocAgreements = $agreements;
+            $ocAgreements['oneclick'] = $this->_model->getConfigData('oneclick_agreement');
             $this->updateCardInfo();
             $hiddenFields['oneclick'] = array(
                 'active' => $this->_model->isDotpayOneClick(),
                 'fields' => $this->getHiddenFieldsOneClick(),
-                'agreements' => $agreements,
+                'agreements' => $ocAgreements,
                 'icon' => $this->_model->getPaymentOneClickImageUrl(),
                 'text' => 'One-Click',
                 'registerText' => __('Card register'),
@@ -143,19 +144,17 @@ class Widget extends Dotpay {
         /**
          * 
          */
-        if($this->_model->isDotpaySecurity()) {
-            foreach($hiddenFields as $key => $val) {
-                $oneclickCardTest = 'oneclick_card';
-                $keySubstr = substr($key, 0, strlen($oneclickCardTest));
-                
-                if($oneclickCardTest === $keySubstr) {
-                    $chk = $this->buildSignature4Request($oneclickCardTest, null, null, $val['fields']['credit_card_customer_id']);
-                } else {
-                    $chk = $this->buildSignature4Request($key);
-                }
+        foreach($hiddenFields as $key => $val) {
+            $oneclickCardTest = 'oneclick_card';
+            $keySubstr = substr($key, 0, strlen($oneclickCardTest));
 
-                $hiddenFields[$key]['fields']['chk'] = $chk;
+            if($oneclickCardTest === $keySubstr) {
+                $chk = $this->buildSignature4Request($oneclickCardTest, null, null, $val['fields']['credit_card_customer_id']);
+            } else {
+                $chk = $this->buildSignature4Request($key);
             }
+
+            $hiddenFields[$key]['fields']['chk'] = $chk;
         }
 
         /**

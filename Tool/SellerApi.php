@@ -62,6 +62,5 @@ class SellerApi {
              ->addOption(CURLOPT_RETURNTRANSFER, 1)
              ->addOption(CURLOPT_TIMEOUT, 100)
              ->addOption(CURLOPT_CUSTOMREQUEST, "GET");
-    }		
-			
+    }
 }
