@@ -98,7 +98,7 @@ class Back extends Dotpay {
         }
         
         if (!$this->getRequest()->getParam('status')) {
-            return $this->_redirect('noroute');
+            return $this->_redirect('customer/account');
         }
 
         if ($this->getRequest()->getParam('status') == 'OK') {

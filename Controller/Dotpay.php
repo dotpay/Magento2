@@ -72,6 +72,13 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
         parent::__construct($context);
         
         $this->_model->setCustomerID($this->_customerSession->getCustomerId());
+        
+        header_register_callback(function(){
+            header_remove('Cache-Control');
+            header('Cache-Control: max-age=0, post-check=0, pre-check=0, private, no-cache, no-store, must-revalidate, proxy-revalidate');
+            header_remove('Pragma');
+            header("Pragma: no-cache");
+        });
     }
     
     /**
