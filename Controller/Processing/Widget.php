@@ -9,6 +9,7 @@ namespace Dotpay\Dotpay\Controller\Processing;
 use Dotpay\Dotpay\Controller\Dotpay;
 use Dotpay\Dotpay\Tool\SellerApi;
 use Dotpay\Dotpay\Tool\Curl;
+use \Dotpay\Dotpay\Model\Payment;
 
 class Widget extends Dotpay {
     
@@ -44,12 +45,12 @@ class Widget extends Dotpay {
         $this->_resultPageFactory = $pageFactory;
 
         parent::__construct(
-            $context
-            , $customerSession
-            , $checkoutSession
-            , $orderFactory
-            , $model
-            , $localeResolver
+            $context,
+            $customerSession,
+            $checkoutSession,
+            $orderFactory,
+            $model,
+            $localeResolver
         );
     }
 
@@ -76,12 +77,16 @@ class Widget extends Dotpay {
          * hidden fields One-Click, MasterPass, BLIK, Dotpay
          */
         $hiddenFields = array();
+        $disabledChannels = array();
+        
+        $channelsApiData = $this->getApiChannels();
         
          /**
          * One-Click Cards
          */
-        if($this->_model->isDotpayOneClick())
+        if($this->_model->isDotpayOneClick() && $this->getChannelData($channelsApiData, Payment::$ocChannel))
         {
+            $disabledChannels[] = Payment::$ocChannel;
             $ocAgreements = $agreements;
             $ocAgreements['oneclick'] = $this->_model->getConfigData('oneclick_agreement');
             $this->updateCardInfo();
@@ -100,10 +105,27 @@ class Widget extends Dotpay {
         }
         
         /**
+         * PV card channel
+         */
+        if($this->_model->isDotpayPV() && $this->isDotSelectedCurrency($this->getDotCurrenciesForPV()) && $this->getChannelData($this->getApiChannels(true), Payment::$pvChannel))
+        {
+            $disabledChannels[] = Payment::$mpChannel;
+            $hiddenFields['pv'] = array(
+                'active' => $this->_model->isDotpayPV(),
+                'fields' => $this->getHiddenFieldsPV(),
+                'agreements' => $agreements,
+                'icon' => $this->_model->getPaymentOneClickImageUrl(),
+                'text' => __('Card channel for your currency'),
+                'action' => $this->getDotAction()
+            );
+        }
+        
+        /**
          * MasterPass
          */
-        if($this->_model->isDotpayMasterPass())
+        if($this->_model->isDotpayMasterPass() && $this->getChannelData($channelsApiData, Payment::$mpChannel))
         {
+            $disabledChannels[] = Payment::$mpChannel;
             $hiddenFields['mp'] = array(
                 'active' => $this->_model->isDotpayMasterPass(),
                 'fields' => $this->getHiddenFieldsMasterPass(),
@@ -117,15 +139,21 @@ class Widget extends Dotpay {
         /**
          * BLIK
          */
-        if($this->_model->isDotpayBlik())
+        if($this->_model->isDotpayTest())
+            $bcFieldName = 'blik_code_fake';
+        else
+            $bcFieldName = 'blik_code';
+        if($this->_model->isDotpayBlik() && $this->getChannelData($channelsApiData, Payment::$blikChannel))
         {
+            $disabledChannels[] = Payment::$blikChannel;
             $hiddenFields['blik'] = array(
                 'active' => $this->_model->isDotpayBlik(),
                 'fields' => $this->getHiddenFieldsBlik(),
                 'agreements' => $agreements,
                 'icon' => $this->_model->getPaymentBlikImageUrl(),
                 'text' => 'BLIK (Polski Standard Płatności Sp. z o.o.)',
-                'action' => $this->getDotAction()
+                'action' => $this->getDotAction(),
+                'bcFieldName' => $bcFieldName
             );
         }
         
@@ -181,6 +209,10 @@ class Widget extends Dotpay {
             'hiddenFields' => $hiddenFields,
             'signatureUrl' => $this->getDotUrlSignature(),
             'oneclickRegisterUrl' => $this->getDotUrlOneClickRegister(),
+            'txtSelectedChannel' => __('Selected payment channel'),
+            'txtChangeChannel' => __('change the channel'),
+            'txtAvChannels' => __('Available channels'),
+            'disabledChannels' => implode(',', $disabledChannels),
         ));
 
         /**
@@ -214,8 +246,7 @@ class Widget extends Dotpay {
          */
         try {
             $curl = new Curl();
-            $curl->init()
-                 ->addOption(CURLOPT_SSL_VERIFYPEER, false)
+            $curl->addOption(CURLOPT_SSL_VERIFYPEER, false)
                  ->addOption(CURLOPT_HEADER, false)
                  ->addOption(CURLOPT_FOLLOWLOCATION, true)
                  ->addOption(CURLOPT_URL, $curl_url)

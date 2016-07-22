@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="reg_popup" translate="reg_description reg_conditions reg_cond1 reg_cond2 reg_cond3 reg_cond4 reg_summary" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+        <attribute type="dpreg_title">Registration</attribute>
+        <attribute type="dpreg_description">In response to the market's needs Dotpay has been delivering innovative Internet payment services providing the widest e-commerce solution offer for years. The domain is money transfers between a buyer and a merchant within a complex service based on counselling and additional security. Within an offer of Internet payments Dotpay offers over 140 payment channels including: mobile payments, instalments, cash, e-wallets, transfers and credit card payments.</attribute>
+        <attribute type="dpreg_conditions">To all new clients who have filled in a form and wish to accept payments we offer promotional conditions:</attribute>
+        <attribute type="dpreg_cond1">commission on Internet payments (not less than PLN 0.30)</attribute>
+        <attribute type="dpreg_cond2">Sandbox Credentials</attribute>
+        <attribute type="dpreg_cond3">Sandbox Credentials</attribute>
+        <attribute type="dpreg_cond4">Sandbox Credentials</attribute>
+        <attribute type="dpreg_summary">Sandbox Credentials</attribute>
+        <frontend_model>Dotpay\Dotpay\Block\Adminhtml\System\Config\RegPopup</frontend_model>
+    </group>
+</include>

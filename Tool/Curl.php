@@ -6,11 +6,8 @@ class Curl {
     private $_resource;
     private $_info;
     
-    public function init()
-    {
+    public function __construct() {
         $this->_resource = curl_init();
-        
-        return $this;
     }
     
     public function addCaInfo($file)

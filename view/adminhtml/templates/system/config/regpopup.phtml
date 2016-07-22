@@ -1,0 +1,64 @@
+<style type="text/css">
+    .dp-button-container {
+        text-align: center;
+    }
+    .dp-button {
+        border-radius: 3px;
+        color: #FFF !important;
+        background-color: #881920;
+        border: medium none;
+        font-size: 20px;
+        padding: 15px 50px;
+        margin: 5px 0px;
+        display: inline-block !important;
+        text-decoration: none !important;
+    }
+    .dotpay-register-panel {
+        display: none;
+        position: relative;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: solid 1px #d3d8db;
+        background-color: #fff;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+    }
+    .dotpay-register-panel h3 {
+        border: none;
+        font-size: 1.2em;
+        line-height: 2.2em;
+        height: 2.2em;
+        text-transform: uppercase;
+        border-bottom: solid 1px #eee;
+        padding: 0 0 0 5px;
+        margin: -20px -16px 15px -16px;
+    }
+    .dotpay-register-panel ul {
+        padding-left: 40px;
+    }
+</style>
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+        $(document).ready(function(){
+            if($('#payment_other_dotpay_dotpay_test').val() != 0)
+                $('.dotpay-register-panel').show();
+        });
+    });
+</script>
+<div class="dotpay-register-panel">
+    <div class="dotpay-offer">
+        <h3><?php echo __('Registration'); ?></h3>
+        <p><?php echo __('In response to the market\'s needs Dotpay has been delivering innovative Internet payment services providing the widest e-commerce solution offer for years. The domain is money transfers between a buyer and a merchant within a complex service based on counselling and additional security. Within an offer of Internet payments Dotpay offers over 140 payment channels including: mobile payments, instalments, cash, e-wallets, transfers and credit card payments.'); ?></p>
+        <p><?php echo __('You chose payment by Dotpay. Select a payment channel and click Continue do proceed'); ?></p>
+        <ul>
+            <li><b>1,9%</b> <?php echo __('commission on Internet payments (not less than PLN 0.30)'); ?></li>
+            <li><?php echo __('instalment payments'); ?> <b><?php echo __('without any commission!'); ?></b></li>
+            <li><?php echo __('an activation fee - only PLN 10'); ?></li>
+            <li><b><?php echo __('without any additional fees'); ?></b> <?php echo __('for refunds and withdrawals!'); ?></li>
+        </ul>
+        <p><?php echo __('In short, minimizing effort and work time you will increase your sales possibilities. Do not hesitate and start your account now!'); ?></p>
+        <div class="dp-button-container">
+            <a href="http://www.dotpay.pl/" class="dp-button"><?php echo __('Register now!'); ?></a>
+        </div>
+    </div>
+</div>

@@ -6,6 +6,9 @@
 
 namespace Dotpay\Dotpay\Controller;
 
+use \Dotpay\Dotpay\Model\Payment;
+use \Dotpay\Dotpay\Tool\Curl;
+
 abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     
     // Force protocol HTTPS for Dotpay response
@@ -124,6 +127,14 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      */
     protected function getDotId() {
         return $this->_model->getConfigData('id');
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getDotPvId() {
+        return $this->_model->getConfigData('pv_id');
     }
     
     /**
@@ -373,6 +384,14 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     
     /**
      * 
+     * @return string
+     */
+    protected function getDotCurrenciesForPV() {
+        return $this->_model->getConfigData('pv_currencies');
+    }
+    
+    /**
+     * 
      * @return array
      */
     private function getHiddenFields() {
@@ -424,7 +443,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             $hiddenFields['currency'] = 'EUR';
         }
         
-        $hiddenFields['channel'] = 248;
+        $hiddenFields['channel'] = Payment::$ocChannel;
         $hiddenFields['ch_lock'] = 1;
         $hiddenFields['type'] = 4;
         
@@ -455,13 +474,28 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * 
      * @return array
      */
+    protected function getHiddenFieldsPV() {
+        $hiddenFields = $this->getHiddenFields();
+        
+        $hiddenFields['channel'] = Payment::$pvChannel;
+        $hiddenFields['id'] = $this->getDotPvId();
+        $hiddenFields['ch_lock'] = 1;
+        $hiddenFields['type'] = 4;
+        
+        return $hiddenFields;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
     protected function getHiddenFieldsMasterPass() {
         $hiddenFields = $this->getHiddenFields();
         
         if($this->_model->isDotpayTest()) {
             $hiddenFields['channel'] = 246;
         } else {
-            $hiddenFields['channel'] = 71;
+            $hiddenFields['channel'] = Payment::$mpChannel;
         }
         
         $hiddenFields['ch_lock'] = 1;
@@ -477,11 +511,93 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     protected function getHiddenFieldsBlik() {
         $hiddenFields = $this->getHiddenFields();
         
-        $hiddenFields['channel'] = 73;
+        $hiddenFields['channel'] = Payment::$blikChannel;
         $hiddenFields['ch_lock'] = 1;
         $hiddenFields['type'] = 4;
         
         return $hiddenFields;
+    }
+    
+    /**
+     * Check, if actual currency is allow
+     * @param string $allowCurrencyForm
+     * @return boolean
+     */
+    protected function isDotSelectedCurrency($allowCurrencyForm) {
+        $result = false;
+        $paymentCurrency = $this->getDotCurrency();
+        $allowCurrency = str_replace(';', ',', $allowCurrencyForm);
+        $allowCurrency = strtoupper(str_replace(' ', '', $allowCurrency));
+        $allowCurrencyArray =  explode(",",trim($allowCurrency));
+        
+        if(in_array(strtoupper($paymentCurrency), $allowCurrencyArray)) {
+            $result = true;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Returns string with channels data JSON
+     * @return string|boolean
+     */
+    protected function getApiChannels($pv=false) {
+        $dotpayUrl = $this->getDotAction();
+        $paymentCurrency = $this->getDotCurrency();
+        
+        if($pv)
+            $dotpayId = $this->getDotPvId();
+        else
+            $dotpayId = $this->getDotId();
+        
+        $orderAmount = $this->getDotAmount();
+        
+        $dotpayLang = $this->getDotLang();
+        
+        $curlUrl = "{$dotpayUrl}payment_api/channels/";
+        $curlUrl .= "?currency={$paymentCurrency}";
+        $curlUrl .= "&id={$dotpayId}";
+        $curlUrl .= "&amount={$orderAmount}";
+        $curlUrl .= "&lang={$dotpayLang}";
+        
+        try {
+            $curl = new Curl();
+            $curl->addOption(CURLOPT_SSL_VERIFYPEER, false)
+                 ->addOption(CURLOPT_HEADER, false)
+                 ->addOption(CURLOPT_FOLLOWLOCATION, true)
+                 ->addOption(CURLOPT_URL, $curlUrl)
+                 ->addOption(CURLOPT_REFERER, $curlUrl)
+                 ->addOption(CURLOPT_RETURNTRANSFER, true);
+            $resultJson = $curl->exec();
+        } catch (Exception $exc) {
+            $resultJson = false;
+        }
+        
+        if($curl) {
+            $curl->close();
+        }
+        
+        return $resultJson;
+    }
+    
+    /**
+     * Returns channel data, if payment channel is active for order data
+     * @param type $id channel id
+     * @return array|false
+     */
+    public function getChannelData($resultJson, $id) {
+        if(false !== $resultJson) {
+            $result = json_decode($resultJson, true);
+
+            if (isset($result['channels']) && is_array($result['channels'])) {
+                foreach ($result['channels'] as $channel) {
+                    if (isset($channel['id']) && $channel['id']==$id) {
+                        return $channel;
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     /**
@@ -492,6 +608,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @return string
      */
     protected function buildSignature4Request($type, $channel = null, $blik = null, $creditCardCustomerId = null) {
+        $pin = $this->_model->getConfigData('pin');
         switch ($type) {
             case 'oneclick':
                 $creditCardId = $this->_model->cardGetCreditCardIdByCardHash($creditCardCustomerId);
@@ -504,6 +621,10 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             case 'mp':
                 $hiddenFields = $this->getHiddenFieldsMasterPass();
                 break;
+            case 'pv':
+                $hiddenFields = $this->getHiddenFieldsPV();
+                $pin = $this->_model->getConfigData('pv_pin');
+                break;
             case 'blik':
                 $hiddenFields = $this->getHiddenFieldsBlik();
                 break;
@@ -514,7 +635,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
         
         
         $fieldsRequestArray = array(
-            'DOTPAY_PIN' => $this->_model->getConfigData('pin'),
+            'DOTPAY_PIN' => $pin,
             'api_version' => $this->getDotApiVersion(),
             'lang' => $hiddenFields['lang'],
             'DOTPAY_ID' => $hiddenFields['id'],
@@ -568,10 +689,10 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
             $fieldsRequestArray['bylaw'] = '1';
             $fieldsRequestArray['personal_data'] = '1';
         } elseif('blik' === $type && $this->_model->isDotpayBlik()) {
-            if(isset($channel)) {
+            if(isset($channel) && !$this->_model->isDotpayTest()) {
                 $fieldsRequestArray['channel'] = $channel;
             }
-            if(isset($blik)) {
+            if(!empty($blik)) {
                 $fieldsRequestArray['blik_code'] = $blik;
             }
             $fieldsRequestArray['bylaw'] = '1';

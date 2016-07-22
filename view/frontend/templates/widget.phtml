@@ -40,6 +40,9 @@ $dataWidget = $block->getDataWidget();
 	img.oneclick {
             height: 60px;
         }
+        img.pv {
+            height: 60px;
+        }
         img.mp {
             height: 60px;
         }
@@ -58,7 +61,7 @@ $dataWidget = $block->getDataWidget();
         .my-form-widget-container + p {
             clear: both;
         }
-        input[name="blik_code"] {
+        input.blik_code {
             width:200px;
             margin: 20px 0px 20px 0px;
         }
@@ -79,6 +82,29 @@ $dataWidget = $block->getDataWidget();
         #oneclick-card-logo {
             width: 200px;
             height: 100px;
+        }
+        
+        /* Collapsible widget */
+        .selected-channel-message {
+            display: none;
+            font-size: 17px;
+            text-decoration: none;
+            margin-bottom: 5px;
+        }
+
+        .selected-channel-message a {
+            text-decoration: none;
+        }
+
+        .selectedChannelContainer {
+            max-width: none !important;
+            cursor: default;
+            display: none;
+            margin-bottom: 15px !important;
+        }
+
+        .selectedChannelContainer hr {
+            display: block;
         }
     </style>
 
@@ -105,7 +131,8 @@ $dataWidget = $block->getDataWidget();
                             lang: '<?php echo $valR['fields']['lang']; ?>',
                             widgetFormContainerClass: 'my-form-widget-container',
                             offlineChannel: 'mark',
-                            offlineChannelTooltip: true
+                            offlineChannelTooltip: true,
+                            disabledChannels: [<?php echo $dataWidget['disabledChannels']; ?>],
                         };
                     </script>
                     <script type="text/javascript" id="dotpay-payment-script" src="<?php echo $valR['action']; ?>widget/payment_widget.js"></script>
@@ -116,7 +143,9 @@ $dataWidget = $block->getDataWidget();
                 <?php endforeach; ?>
 
                 <?php if ('dotpay' === $keyR && $dataWidget['widget']) : ?>
-                    <p class="my-form-widget-container"></p>
+                    <div class="selected-channel-message"><?php echo $dataWidget['txtSelectedChannel']; ?>: <a href="#" class="channel-selected-change">(<?php echo $dataWidget['txtChangeChannel']; ?>)</a></div>
+                    <div class="selectedChannelContainer channels-wrapper"><hr /></div>
+                    <div class="collapsibleWidgetTitle"><?php echo $dataWidget['txtAvChannels']; ?>:</div><p class="my-form-widget-container"></p>
                 <?php endif; ?>
 
                 <?php if ('oneclick' === $keyR) : ?>
@@ -148,7 +177,7 @@ $dataWidget = $block->getDataWidget();
                 <?php endif; ?>
 
                 <?php if ('blik' === $keyR) : ?>
-                    <input form-target="<?php echo $keyR; ?>" type="text" value="" name="blik_code" autofocus required pattern="[0-9]{6}" title="<?php echo $dataWidget['blikTxtValid']; ?>" placeholder="<?php echo $dataWidget['blikTxtPlaceholder']; ?>">
+                    <input form-target="<?php echo $keyR; ?>" class="blik_code" type="text" value="" name="<?php echo $valR['bcFieldName']; ?>" autofocus required pattern="[0-9]{6}" title="<?php echo $dataWidget['blikTxtValid']; ?>" placeholder="<?php echo $dataWidget['blikTxtPlaceholder']; ?>">
                 <?php endif; ?>
 
                 <?php if (('dotpay' !== $keyR) || ('dotpay' === $keyR && $dataWidget['widget'])) : ?>
@@ -184,7 +213,75 @@ $dataWidget = $block->getDataWidget();
                         }, 'fast');
                         return this;
                     }
-                })(jQuery);
+                })($);
+                
+                (function($) {
+                    var defaults = {
+                        channelsContainerClass: "dotpay-channels-selection",
+                        channelChangeClass: "channel-selected-change",
+                        selectedChannelContainerClass: "selectedChannelContainer",
+                        messageContainerClass: "selected-channel-message",
+                        collapsibleWidgetTitleClass: "collapsibleWidgetTitle",
+                        widgetContainerClass: "my-form-widget-container"
+                    };
+
+                    var settings = {};
+
+                    $.dpCollapsibleWidget = function(options) {
+                        if(window.dotpayRegisterWidgetEvent == undefined) {
+                            window.dotpayRegisterWidgetEvent = true;
+                            settings = $.extend( {}, defaults, options );
+                            connectEventToWidget();
+                            $('.'+settings.selectedChannelContainerClass+', .'+settings.messageContainerClass).click(function(e){
+                                e.stopPropagation();
+                                e.preventDefault();
+                                return false;
+                            });
+                            $('.'+settings.channelChangeClass).click(onChangeSelectedChannel);
+                        }
+                        return this;
+                    }
+                    function connectEventToWidget() {
+                        $('.channel-container').on('click', function(e) {
+                            $('.channel-input', this).prop('checked', true);
+                            var id = $(this).find('.channel-input').val();
+                            if(id == undefined)
+                                return false;
+                            var container = copyChannelContainer(id);
+                            $('.'+settings.selectedChannelContainerClass+' div').remove();
+                            container.insertBefore($('.'+settings.selectedChannelContainerClass+' hr'));
+                            toggleWidgetView();
+                            e.preventDefault();
+                        });
+                    }
+
+                    function copyChannelContainer(id) {
+                        var container = $('.'+settings.widgetContainerClass+' #'+id).parents('.channel-container').clone();
+                        container.find('.tooltip').remove();
+                        container.find('.input-container').remove();
+                        container.removeClass('not-online');
+                        return container;
+                    }
+
+                    function onChangeSelectedChannel(e) {
+                        toggleWidgetView();
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    function toggleWidgetView() {
+                        $('.'+settings.collapsibleWidgetTitleClass+', .'+settings.selectedChannelContainerClass+' hr, .'+settings.widgetContainerClass).animate(
+                            {
+                                height: "toggle",
+                                opacity: "toggle"
+                            }, {
+                                duration: "slow"
+                            }
+                        );
+                        $('.'+settings.messageContainerClass+',.'+settings.selectedChannelContainerClass).show();
+                    }
+                })($);
                 
                 var isOneClick = Boolean('<?php echo $dataWidget['oneclick'] ?>');
                 var isMasterPass = Boolean('<?php echo $dataWidget['mp'] ?>');
@@ -208,6 +305,8 @@ $dataWidget = $block->getDataWidget();
                             strategyOneClick(target);
                         } else if ('mp' === target) {
                             strategyMasterPass(target);
+                        } else if ('pv' === target) {
+                            strategyPV(target);
                         } else if ('blik' === target) {
                             strategyBlik(target);
                         } else if ('dotpay' === target) {
@@ -219,7 +318,7 @@ $dataWidget = $block->getDataWidget();
                         }
                     });
 
-                    $('body').on('input', 'input[name="blik_code"]', function () {
+                    $('body').on('input', 'input.blik_code', function () {
                         var target = $(this).attr('form-target');
                         var data = {
                             type: target,
@@ -333,12 +432,11 @@ $dataWidget = $block->getDataWidget();
 
                         getCHK(data);
                     }
-
-                    function strategyBlik(target) {
+                    
+                    function strategyPV(target) {
                         var data = {
                             type: target,
-                            channel: $('form[form-target="' + target + '"] input[name="channel"]').val(),
-                            blik: $('form[form-target="' + target + '"] input[name="blik_code"]').val()
+                            channel: $('form[form-target="' + target + '"] input[name="channel"]').val()
                         };
 
                         $('form[form-target="' + target + '"]').show();
@@ -346,12 +444,29 @@ $dataWidget = $block->getDataWidget();
                         getCHK(data);
                     }
 
+                    function strategyBlik(target) {
+                        var data = {
+                            type: target,
+                            channel: $('form[form-target="' + target + '"] input[name="channel"]').val(),
+                            blik: $('form[form-target="' + target + '"] input.blik_code').val()
+                        };
+
+                        $('form[form-target="' + target + '"]').show();
+                        
+                        if($('form[form-target="' + target + '"] input.blik_code').val() != '')
+                            getCHK(data);
+                    }
+
                     function strategyWidget(target) {
                         var data = {
                             type: target,
                             widget: isWidget
                         };
-
+                        
+                        if($('form[form-target="' + target + '"] input[name="channel"]:checked').length)
+                            $('form[form-target] input[type="submit"]').attr('disabled', false);
+                        
+                        $.dpCollapsibleWidget();
                         $('form[form-target="' + target + '"]').show();
 
                         $('form[form-target="' + target + '"] input[name="channel"]').each(function (key, val) {

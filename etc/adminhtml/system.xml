@@ -8,8 +8,11 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="payment">
-            <group id="dotpay_dotpay" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="dotpay_dotpay" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Dotpay</label>
+                <group id="reg_popup" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Dotpay\Dotpay\Block\Adminhtml\System\Config\RegPopup</frontend_model>
+                </group>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -18,10 +21,16 @@
                     <label>Title</label>
                 </field>
                 <field id="id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>ID</label>
+                    <label>Dotpay customer ID</label>
+                    <validate>validate-no-empty validate-number validate-length maximum-length-6</validate>
                 </field>
                 <field id="pin" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>PIN</label>
+                    <label>Dotpay customer PIN</label>
+                    <validate>validate-no-empty validate-length minimum-length-32</validate>
+                </field>
+                <field id="test" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Testing environment</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="oneclick" translate="label" type="select" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>One-Click</label>
@@ -31,41 +40,63 @@
                 <field id="dotpay_user" translate="label" type="text" sortOrder="43" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>User name</label>
                     <comment>User name for Dotpay panel</comment>
+                    <tooltip>Required for OneClick channel</tooltip>
+                    <depends>
+                        <field id="oneclick">1</field>
+                    </depends>
+                    <validate>validate-email</validate>
                 </field>
                 <field id="dotpay_password" translate="label" type="password" sortOrder="44" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>User password</label>
                     <comment>User password for Dotpay panel</comment>
+                    <tooltip>Required for OneClick channel</tooltip>
+                    <depends>
+                        <field id="oneclick">1</field>
+                    </depends>
                 </field>
-                <field id="masterpass" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="pv" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Currency card channel</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Show separately in a shop channel</comment>
+                </field>
+                <field id="pv_id" translate="label" type="text" sortOrder="46" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Dotpay customer ID</label>
+                    <comment>Dedicated to card channel</comment>
+                    <validate>validate-no-empty validate-number validate-length maximum-length-6</validate>
+                    <depends>
+                        <field id="pv">1</field>
+                    </depends>
+                </field>
+                <field id="pv_pin" translate="label" type="text" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Dotpay customer PIN</label>
+                    <comment>Dedicated to card channel</comment>
+                    <validate>validate-no-empty validate-length minimum-length-32</validate>
+                    <depends>
+                        <field id="pv">1</field>
+                    </depends>
+                </field>
+                <field id="pv_currencies" translate="label" type="text" sortOrder="48" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Currencies for card channel</label>
+                    <comment>Currencies used for separated card channel</comment>
+                    <tooltip>Please enter currency codes separated by commas, for example: EUR,USD</tooltip>
+                    <depends>
+                        <field id="pv">1</field>
+                    </depends>
+                </field>
+                <field id="masterpass" translate="label" type="select" sortOrder="49" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>MasterPass (First Data Polska S.A.)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Show separately in a shop channel</comment>
                 </field>
-                <field id="blik" translate="label" type="select" sortOrder="48" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="blik" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>BLIK (Polski Standard Płatności Sp. z o.o.)</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Show separately in a shop channel</comment>
                 </field>
-                <field id="widget" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="widget" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Widget</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Display payment channels in a shop</comment>
-                </field>
-                <field id="test" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Testing environment</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Minimum Order Total</label>
-                    <comment>Leave empty to disable limit</comment>
-                </field>
-                <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Maximum Order Total</label>
-                    <comment>Leave empty to disable limit</comment>
-                </field>
-                 <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Sort Order</label>
-                    <comment>Leave empty to disable sort order</comment>
                 </field>
             </group>
         </section>

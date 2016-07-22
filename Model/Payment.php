@@ -12,6 +12,11 @@ use Magento\Quote\Api\Data\CartInterface;
 class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements ConfigProviderInterface {
 
     const CODE = 'dotpay_dotpay';
+    
+    public static $ocChannel = 248;
+    public static $pvChannel = 248;
+    public static $blikChannel = 73;
+    public static $mpChannel = 71;
 
     protected $_code = self::CODE;
     protected $_countryFactory;
@@ -202,6 +207,24 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
             $result = false;
         }
         if (null === $this->getCustomerID() || 0 === $this->getCustomerID()) {
+            $result = false;
+        }
+
+        return $result;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function isDotpayPV() {
+        $result = false;
+
+        if (1 === (int) $this->getConfigData('pv')) {
+            $result = true;
+        }
+
+        if (false === $this->_agreements) {
             $result = false;
         }
 

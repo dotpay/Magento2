@@ -30,7 +30,6 @@ class SellerApi {
     {
         $url = $this->_baseurl.$this->getDotPaymentApi()."payments/$number/";
         $curl = new Curl();
-        $curl->init();
         $curl->addOption(CURLOPT_URL, $url)
              ->addOption(CURLOPT_USERPWD, $username.':'.$password);
         $this->setCurlOption($curl);
@@ -42,7 +41,6 @@ class SellerApi {
     {
         $url = $this->_baseurl.$this->getDotPaymentApi().'payments/?control='.$orderId;
         $curl = new Curl();
-        $curl->init();
         $curl->addOption(CURLOPT_URL, $url)
              ->addOption(CURLOPT_USERPWD, $username.':'.$password);
         $this->setCurlOption($curl);

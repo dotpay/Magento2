@@ -58,7 +58,10 @@ class Signature extends Dotpay {
                 $chk = $this->buildSignature4Request($type, $channel);
                 break;
             case 'blik':
-                $blik = $this->getRequest()->getParam('blik');
+                if($this->_model->isDotpayTest())
+                    $blik = NULL;
+                else
+                    $blik = $this->getRequest()->getParam('blik');
                 $chk = $this->buildSignature4Request($type, $channel, $blik);
                 break;
             case 'dotpay':

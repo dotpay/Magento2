@@ -1,6 +1,6 @@
 {
     "name": "dotpay/dotpay",
-    "description": "N/A",
+    "description": "Dotpay payment gateway for Magento2",
     "require": {
         "php": "~5.5.0|~5.6.0|~7.0.0",
         "magento/module-config": "100.0.*",
@@ -21,7 +21,7 @@
     "suggest": {
         "magento/module-checkout-agreements": "100.0.*"
     },
-    "version": "3.0.1",
+    "version": "3.0.3",
     "license": [
         "proprietary"
     ],
