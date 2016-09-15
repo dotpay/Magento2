@@ -76,3 +76,4 @@ class Signature extends Dotpay {
         die($chk);
     }
 }
+

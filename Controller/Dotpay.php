@@ -78,9 +78,13 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
         
         header_register_callback(function(){
             header_remove('Cache-Control');
-            header('Cache-Control: max-age=0, post-check=0, pre-check=0, private, no-cache, no-store, must-revalidate, proxy-revalidate');
+            header('Cache-Control: max-age=0, post-check=0, pre-check=0, private, no-cache, no-store, must-revalidate, proxy-revalidate', true);
             header_remove('Pragma');
-            header("Pragma: no-cache");
+            header("Pragma: no-cache", true);
+            header_remove('Last-Modified');
+            header("Last-Modified: " . gmdate('D, d M Y H:i:s \G\M\T', time() - 1), true);
+            header_remove('Expires');
+            header('Expires: on,' . gmdate('D, d M Y H:i:s \G\M\T', time() - (60 * 60)), true);
         });
     }
     
@@ -245,7 +249,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @return string
      */
     protected function getDotUrlC() {
-		return "{$this->getServerProtocol()}://{$_SERVER['HTTP_HOST']}/dotpay/notification/response";
+        return "{$this->getServerProtocol()}://{$_SERVER['HTTP_HOST']}/dotpay/notification/response";
     }
     
     /**

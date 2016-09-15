@@ -18,6 +18,11 @@ class Widget extends \Magento\Framework\View\Element\Template
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry;
+    
+    /**
+     * @var bool
+     */
+    protected $_isScopePrivate;
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
@@ -33,6 +38,7 @@ class Widget extends \Magento\Framework\View\Element\Template
     ) {
         $this->_customerSession = $customerSession;
         $this->_coreRegistry = $coreRegistry;
+        $this->_isScopePrivate = true;
         parent::__construct($context, $data);
     }
     

@@ -15,6 +15,11 @@ class Back extends \Magento\Framework\View\Element\Template
     protected $_coreRegistry;
     
     /**
+     * @var bool
+     */
+    protected $_isScopePrivate;
+    
+    /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Framework\Registry
@@ -27,6 +32,7 @@ class Back extends \Magento\Framework\View\Element\Template
         array $data = []
     ) {
         $this->_coreRegistry = $coreRegistry;
+        $this->_isScopePrivate = true;
         parent::__construct($context, $data);
     }
     

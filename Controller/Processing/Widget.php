@@ -32,14 +32,14 @@ class Widget extends Dotpay {
      * @param \Magento\Framework\View\Result\PageFactory $pageFactory
      */
     public function __construct(
-    \Magento\Framework\App\Action\Context $context
-    , \Magento\Customer\Model\Session $customerSession
-    , \Magento\Checkout\Model\Session $checkoutSession
-    , \Magento\Sales\Model\OrderFactory $orderFactory
-    , \Dotpay\Dotpay\Model\Payment $model
-    , \Magento\Framework\Locale\Resolver $localeResolver
-    , \Magento\Framework\Registry $coreRegistry
-    , \Magento\Framework\View\Result\PageFactory $pageFactory
+        \Magento\Framework\App\Action\Context $context
+        , \Magento\Customer\Model\Session $customerSession
+        , \Magento\Checkout\Model\Session $checkoutSession
+        , \Magento\Sales\Model\OrderFactory $orderFactory
+        , \Dotpay\Dotpay\Model\Payment $model
+        , \Magento\Framework\Locale\Resolver $localeResolver
+        , \Magento\Framework\Registry $coreRegistry
+        , \Magento\Framework\View\Result\PageFactory $pageFactory
     ) {
         $this->_coreRegistry = $coreRegistry;
         $this->_resultPageFactory = $pageFactory;
