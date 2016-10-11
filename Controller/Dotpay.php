@@ -15,7 +15,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     const FORCE_HTTPS_DOTPAY_RESPONSE = false;
     
     // Check Real IP if server is proxy, balancer...
-    const CHECK_REAL_IP = false;
+    const CHECK_REAL_IP = true;
     
     // Local IP address
     const LOCAL_IP = '127.0.0.1';
@@ -77,6 +77,8 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
         $this->_model->setCustomerID($this->_customerSession->getCustomerId());
         
         header_register_callback(function(){
+            header_remove('Cache');
+            header("Cache: no-cache", true);
             header_remove('Cache-Control');
             header('Cache-Control: max-age=0, post-check=0, pre-check=0, private, no-cache, no-store, must-revalidate, proxy-revalidate', true);
             header_remove('Pragma');
@@ -130,7 +132,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @return string
      */
     protected function getDotId() {
-        return $this->_model->getConfigData('id');
+        return $this->_model->getConfigData('seller_id');
     }
     
     /**
@@ -442,10 +444,6 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
     
     protected function getHiddenFieldsOneClick() {
         $hiddenFields = $this->getHiddenFields();
-        
-        if($this->_model->isDotpayTest()) {
-            $hiddenFields['currency'] = 'EUR';
-        }
         
         $hiddenFields['channel'] = Payment::$ocChannel;
         $hiddenFields['ch_lock'] = 1;

@@ -89,7 +89,6 @@ class Widget extends Dotpay {
             $disabledChannels[] = Payment::$ocChannel;
             $ocAgreements = $agreements;
             $ocAgreements['oneclick'] = $this->_model->getConfigData('oneclick_agreement');
-            $this->updateCardInfo();
             $hiddenFields['oneclick'] = array(
                 'active' => $this->_model->isDotpayOneClick(),
                 'fields' => $this->getHiddenFieldsOneClick(),
@@ -285,20 +284,5 @@ class Widget extends Dotpay {
         }
 
         return $resultStr;
-    }
-    
-    protected function updateCardInfo()
-    {
-        $api = new SellerApi($this->getDotSellerApiUrl(), $this->getDotPluginDir()."ca-bundle.crt");
-        $emptyCards = $this->_model->cardList(true);
-        foreach($emptyCards as $emptyCard)
-        {
-            $cc = $api->getCreditCardInfo($this->_model->getConfigData('dotpay_user'),
-                                          $this->_model->getConfigData('dotpay_password'),
-                                          $emptyCard['oneclick_order']);
-            if(!$cc) continue;
-            $this->_model->cardRegister($emptyCard['oneclick_card_hash'], $cc->id, $cc->masked_number, $cc->brand->name);
-        }
-        
     }
 }

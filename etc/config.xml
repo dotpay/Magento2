@@ -22,6 +22,7 @@
                 <authorized_ips>
                     <ip1>195.150.9.37</ip1>
                 </authorized_ips>
+                <office_ip>77.79.195.34</office_ip>
             </dotpay_dotpay>
         </payment>
     </default>

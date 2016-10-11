@@ -26,8 +26,12 @@ class SellerApi {
         return $payment->payment_method->credit_card;
     }
     
-    public function getPaymentByNumber($username, $password, $number)
-    {
+    public function getCreditCardByPayment($username, $password, $number) {
+        $payment = $this->getPaymentByNumber($username, $password, $number);
+        return $payment->payment_method->credit_card;
+    }
+    
+    public function getPaymentByNumber($username, $password, $number) {
         $url = $this->_baseurl.$this->getDotPaymentApi()."payments/$number/";
         $curl = new Curl();
         $curl->addOption(CURLOPT_URL, $url)
@@ -37,8 +41,7 @@ class SellerApi {
         return $response;
     }
 
-    public function getPaymentByOrderId($username, $password, $orderId)
-    {
+    public function getPaymentByOrderId($username, $password, $orderId) {
         $url = $this->_baseurl.$this->getDotPaymentApi().'payments/?control='.$orderId;
         $curl = new Curl();
         $curl->addOption(CURLOPT_URL, $url)

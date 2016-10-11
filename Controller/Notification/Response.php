@@ -7,6 +7,7 @@
 namespace Dotpay\Dotpay\Controller\Notification;
 
 use Dotpay\Dotpay\Controller\Dotpay;
+use Dotpay\Dotpay\Tool\SellerApi;
 
 class Response extends Dotpay {
 
@@ -113,7 +114,7 @@ class Response extends Dotpay {
 
         $lastStatus = $order->getStatus();
         if (\Magento\Sales\Model\Order::STATE_COMPLETE === $lastStatus || \Magento\Sales\Model\Order::STATE_CANCELED === $lastStatus) {
-            die('OK');
+            //die('OK');
         }
 
         $payment = $order->getPayment();
@@ -123,6 +124,9 @@ class Response extends Dotpay {
         if (self::STATUS_COMPLETED === $this->fields['operation_status']) {
             $transaction->setIsClosed(1);
             $order->setStatus(\Magento\Sales\Model\Order::STATE_COMPLETE);
+            if($this->_model->isDotpayOneClick()) {
+                $this->updateCardInfo($this->fields['operation_number'], $this->fields['control']);
+            }
         } elseif (self::STATUS_REJECTED === $this->fields['operation_status']) {
             $transaction->setIsClosed(1);
             $order->setStatus(\Magento\Sales\Model\Order::STATE_CANCELED);
@@ -162,6 +166,10 @@ class Response extends Dotpay {
         $realIp = isset($_SERVER['HTTP_X_REAL_IP']) ? $_SERVER['HTTP_X_REAL_IP'] : '0.0.0.0';
         
         if (in_array($remoteIp, $ips)) {
+            /**
+             * OK NOP
+             */
+        } else if($this->_model->getConfigData('test') && ($remoteIp == $this->_model->getConfigData('office_ip') || $remoteIp == self::LOCAL_IP)) {
             /**
              * OK NOP
              */
@@ -229,5 +237,13 @@ class Response extends Dotpay {
 
         return hash('sha256', $string);
     }
-
+    
+    protected function updateCardInfo($payment, $order) {
+        $api = new SellerApi($this->getDotSellerApiUrl());
+        $cc = $api->getCreditCardByPayment($this->_model->getConfigData('dotpay_user'),
+                                           $this->_model->getConfigData('dotpay_password'),
+                                           $payment);
+        if(!$cc) return;
+            $this->_model->cardRegister($order, $cc->id, $cc->masked_number, $cc->brand->name);
+    }
 }

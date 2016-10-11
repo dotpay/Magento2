@@ -69,7 +69,6 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
          */
         $this->getDBConnection();
         $this->getDBTablePrefix();
-        $this->createTableOneClick();
         $this->_checkTableOneClick = $this->checkTableOneClick();
     }
 
@@ -96,7 +95,6 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
      * @return bool
      */
     public function isAvailable(CartInterface $quote = null) {
-
         if ($quote && (
                 $quote->getBaseGrandTotal() < $this->_minAmount || ($this->_maxAmount && $quote->getBaseGrandTotal() > $this->_maxAmount))
         ) {
@@ -220,7 +218,7 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
     public function isDotpayPV() {
         $result = false;
 
-        if (1 === (int) $this->getConfigData('pv')) {
+        if (1 === (int) $this->getConfigData('pv_enable')) {
             $result = true;
         }
 
@@ -318,7 +316,6 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
      * 
      */
     private function createTableOneClick() {
-
         $sqlCreateTable = <<<END
             CREATE TABLE IF NOT EXISTS `{$this->_tablePrefix}{$this->_tableOneClick}` (
                 `oneclick_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -338,6 +335,7 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
 END;
 
         try {
+            //$this->_connection->commit();
             $this->_connection->rawQuery($sqlCreateTable);
         } catch (Exception $exc) {
             /**
@@ -357,7 +355,7 @@ END;
             foreach ($tables as $table) {
                 if ($table === "{$this->_tablePrefix}{$this->_tableOneClick}") {
                     $ok = true;
-                    break 2;
+                    break;
                 }
             }
         }
@@ -426,6 +424,8 @@ END;
      * 
      */
     public function cardAdd($orderId) {
+        $this->createTableOneClick();
+        $this->_checkTableOneClick = $this->checkTableOneClick();
         $result = 0;
 
         if ($this->_checkTableOneClick) {
@@ -533,19 +533,42 @@ END;
 
         return $results;
     }
-
+    
     /**
      * 
      */
-    public function cardRegister($cardHash, $cardId, $cardMask, $cardBrand) {
+    public function cardGetDataByOrderId($orderId) {
+        $sql = <<<END
+            SELECT *
+            FROM {$this->_tablePrefix}{$this->_tableOneClick}
+            WHERE
+                oneclick_user = '{$this->getCustomerID()}'
+                AND
+                oneclick_order = '{$orderId}'
+            LIMIT 1
+            ;
+END;
+
+        $results = null;
+        if ($this->_checkTableOneClick) {
+            $row = $this->_connection->fetchRow($sql);
+            $results = empty($row) ? null : array('oneclick_card_id'=>$row['oneclick_card_id'],'oneclick_card_hash'=>$row['oneclick_card_hash']);
+        }
+
+        return $results;
+    }
+    
+    /**
+     * 
+     */
+    public function cardRegister($orderId, $cardId, $cardMask, $cardBrand) {
         $sql = <<<END
             UPDATE {$this->_tablePrefix}{$this->_tableOneClick}
             SET oneclick_card_id = '{$cardId}'
             , oneclick_card_mask = '{$cardMask}'
             , oneclick_card_brand = '{$cardBrand}'
-            WHERE oneclick_card_hash = '{$cardHash}'
+            WHERE oneclick_order = '{$orderId}'
             ;
-
 END;
         try {
             $this->_connection->rawQuery($sql);

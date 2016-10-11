@@ -14,29 +14,29 @@ class DeleteCustomer implements ObserverInterface
     /**
      * @var ObjectManagerInterface
      */
-    protected $_objectManager;
+    protected $objectManager;
 
     /**
      * Constructor
-     *
-     * @param DotpayConfig $dotpayConfig
+     * 
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
      */
     public function __construct(
         \Magento\Framework\ObjectManagerInterface $objectManager
     ) {
-        $this->_objectManager = $objectManager;
+        $this->objectManager = $objectManager;
     }
 
     /**
      * Add Dotpay shortcut buttons
      *
-     * @param EventObserver $observer
+     * @param EventObserver $observer 
      * @return void
      */
     public function execute(EventObserver $observer)
     {
         $customerId = $observer->getEvent()->getCustomer()->getCustomerId();
-        $paymentModel = $this->_objectManager->create('Dotpay\Dotpay\Model\Payment');
+        $paymentModel = $this->objectManager->create('Dotpay\Dotpay\Model\Payment');
         $paymentModel->cardDeleteForCustomer($customerId);
     }
 }
