@@ -9,8 +9,7 @@ use Dotpay\Dotpay\Model\Payment as DotpayConfig;
 /**
  * Dotpay oneclick delete customer observer
  */
-class DeleteCustomer implements ObserverInterface
-{
+class DeleteCustomer implements ObserverInterface {
     /**
      * @var ObjectManagerInterface
      */
@@ -33,8 +32,7 @@ class DeleteCustomer implements ObserverInterface
      * @param EventObserver $observer 
      * @return void
      */
-    public function execute(EventObserver $observer)
-    {
+    public function execute(EventObserver $observer) {
         $customerId = $observer->getEvent()->getCustomer()->getCustomerId();
         $paymentModel = $this->objectManager->create('Dotpay\Dotpay\Model\Payment');
         $paymentModel->cardDeleteForCustomer($customerId);

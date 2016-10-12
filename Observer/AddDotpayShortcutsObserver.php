@@ -9,8 +9,7 @@ use Dotpay\Dotpay\Model\Payment as DotpayConfig;
 /**
  * Dotpay module observer
  */
-class AddDotpayShortcutsObserver implements ObserverInterface
-{
+class AddDotpayShortcutsObserver implements ObserverInterface {
     /**
      * @var DotpayConfig
      */
@@ -33,15 +32,12 @@ class AddDotpayShortcutsObserver implements ObserverInterface
      * @param EventObserver $observer
      * @return void
      */
-    public function execute(EventObserver $observer)
-    {
-        /** @var \Magento\Catalog\Block\ShortcutButtons $shortcutButtons */
+    public function execute(EventObserver $observer) {
         $shortcutButtons = $observer->getEvent()->getContainer();
         
         $params = [
         ];
 
-        // we believe it's \Magento\Framework\View\Element\Template
         $shortcut = $shortcutButtons->getLayout()->createBlock(
             'Dotpay\Dotpay\Block\Shortcut',
             '',

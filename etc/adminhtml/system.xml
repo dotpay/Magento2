@@ -64,7 +64,7 @@
                     <comment>Dedicated to card channel</comment>
                     <validate>validate-no-empty validate-number validate-length maximum-length-6</validate>
                     <depends>
-                        <field id="pv">1</field>
+                        <field id="pv_enable">1</field>
                     </depends>
                 </field>
                 <field id="pv_pin" translate="label" type="text" sortOrder="47" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -72,7 +72,7 @@
                     <comment>Dedicated to card channel</comment>
                     <validate>validate-no-empty validate-length minimum-length-32</validate>
                     <depends>
-                        <field id="pv">1</field>
+                        <field id="pv_enable">1</field>
                     </depends>
                 </field>
                 <field id="pv_currencies" translate="label" type="text" sortOrder="48" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -80,7 +80,7 @@
                     <comment>Currencies used for separated card channel</comment>
                     <tooltip>Please enter currency codes separated by commas, for example: EUR,USD</tooltip>
                     <depends>
-                        <field id="pv">1</field>
+                        <field id="pv_enable">1</field>
                     </depends>
                 </field>
                 <field id="masterpass" translate="label" type="select" sortOrder="49" showInDefault="1" showInWebsite="1" showInStore="0">

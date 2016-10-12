@@ -335,7 +335,6 @@ class Payment extends \Magento\Payment\Model\Method\AbstractMethod implements Co
 END;
 
         try {
-            //$this->_connection->commit();
             $this->_connection->rawQuery($sqlCreateTable);
         } catch (Exception $exc) {
             /**
@@ -364,7 +363,8 @@ END;
     }
 
     /**
-     * 
+     * Returns the connection object
+     * @return type
      */
     public function getConnection() {
         return $this->_connection;
@@ -391,7 +391,6 @@ END;
                 AND
                 oneclick_card_id IS {$not} NULL
             ;
-
 END;
         $results = array();
         if ($this->_checkTableOneClick) {
@@ -402,6 +401,7 @@ END;
     }
 
     /**
+     * 
      * 
      */
     private function generateCardHash() {
@@ -433,18 +433,18 @@ END;
             do {
                 $cardHash = $this->generateCardHash();
                 $test = $this->_connection->insert(
-                        "{$this->_tablePrefix}{$this->_tableOneClick}"
-                        , array(
-                    'oneclick_order' => "{$orderId}"
-                    , 'oneclick_user' => "{$this->getCustomerID()}"
-                    , 'oneclick_card_hash' => "{$cardHash}"
-                        )
-                        , array(
-                    '%d'
-                    , '%d'
-                    , '%s'
-                    , '%s'
-                        )
+                    "{$this->_tablePrefix}{$this->_tableOneClick}",
+                    array(
+                        'oneclick_order' => "{$orderId}",
+                        'oneclick_user' => "{$this->getCustomerID()}",
+                        'oneclick_card_hash' => "{$cardHash}"
+                    ),
+                    array(
+                        '%d',
+                        '%d',
+                        '%s',
+                        '%s'
+                    )
                 );
 
                 if (false !== $test) {
@@ -472,7 +472,6 @@ END;
                 oneclick_card_hash = '{$cardHash}'
             LIMIT 1
             ;
-
 END;
 
         $results = null;
@@ -497,7 +496,6 @@ END;
                 oneclick_card_hash = '{$cardHash}'
             LIMIT 1
             ;
-
 END;
 
         $results = null;
@@ -522,7 +520,6 @@ END;
                 oneclick_id = '{$oneclickId}'
             LIMIT 1
             ;
-
 END;
 
         $results = null;
@@ -590,7 +587,6 @@ END;
                 AND
                 oneclick_user = '{$this->getCustomerID()}'
             ;
-
 END;
         try {
             $this->_connection->rawQuery($sql);
@@ -609,7 +605,6 @@ END;
             DELETE FROM {$this->_tablePrefix}{$this->_tableOneClick}
             WHERE oneclick_user = '{$id}'
             ;
-
 END;
         try {
             $this->_connection->rawQuery($sql);
