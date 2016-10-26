@@ -34,10 +34,9 @@ class Back extends Dotpay {
     , \Dotpay\Dotpay\Model\Payment $model
     , \Magento\Framework\Locale\Resolver $localeResolver
     , \Magento\Framework\Registry $coreRegistry
-    , \Magento\Framework\View\Result\PageFactory $pageFactory
-    , \Magento\Framework\UrlInterface $urlBuilder	
+    , \Magento\Framework\View\Result\PageFactory $pageFactory	
     ) {
-        $this->_urlBuilder = $urlBuilder;
+        $this->_urlBuilder = $context->getUrl();
         $this->_coreRegistry = $coreRegistry;
         $this->_resultPageFactory = $pageFactory;
 

@@ -213,10 +213,7 @@ class Widget extends Dotpay {
             'txtAvChannels' => __('Available channels'),
             'disabledChannels' => implode(',', $disabledChannels),
         ));
-
-        /**
-         * must be before return?
-         */
+        
         $this->_view->getPage()->getConfig()->getTitle()->set(__('Dotpay channels payment'));
 
         return $this->_resultPageFactory->create();
