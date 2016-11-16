@@ -130,7 +130,7 @@ class Widget extends Dotpay {
                 'fields' => $this->getHiddenFieldsMasterPass(),
                 'agreements' => $agreements,
                 'icon' => $this->_model->getPaymentMasterPassImageUrl(),
-                'text' => 'MasterPass (First Data Polska S.A.)',
+                'text' => 'MasterPass',
                 'action' => $this->getDotAction()
             );
         }
