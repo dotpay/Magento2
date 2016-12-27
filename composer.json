@@ -19,7 +19,7 @@
         "lib-libxml": "*"
     },
     "suggest": {
-        "magento/module-checkout-agreements": "100.*",
+        "magento/module-checkout-agreements": "100.*"
     },
     "version": "3.0.6",
     "license": [
