@@ -8,7 +8,7 @@ Wtyczka może zostać zainstalowana na dwa możliwe sposoby:
 
 a) przy użyciu narzędzia composer: po przejściu do głównego katalogu Magento2 w konsoli systemu operacyjnego należy wpisać komendę:
 ```
-composer require dotpay/dotpay dev-master
+composer require dotpay/magento2 dev-master
 ```
 
 b) kopiując pliki wtyczki do katalogu:
@@ -35,7 +35,7 @@ Plugin can be installed in two ways:
 
 a) using composer: when inside Magento2 root folder enter in system command prompt:
 ```
-composer require dotpay/dotpay dev-master
+composer require dotpay/magento2 dev-master
 ```
 
 b) copy plugin files to:
