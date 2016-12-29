@@ -1,25 +1,25 @@
 {
-    "name": "dotpay/dotpay",
+    "name": "dotpay/magento2",
     "description": "Dotpay payment gateway for Magento2",
     "require": {
         "php": "~5.5.0|~5.6.0|~7.0.0",
-        "magento/module-config": "100.*",
-        "magento/module-store": "100.*",
-        "magento/module-checkout": "100.*",
-        "magento/module-sales": "100.*",
-        "magento/module-quote": "100.*",
-        "magento/module-customer": "100.*",
-        "magento/module-payment": "100.*",
-        "magento/module-backend": "100.*",
-        "magento/module-directory": "100.*",
-        "magento/module-theme": "100.*",
-        "magento/module-catalog": "100.*",
-        "magento/framework": "100.*",
-        "magento/module-ui": "100.*",
+        "magento/module-config": "*",
+        "magento/module-store": "*",
+        "magento/module-checkout": "*",
+        "magento/module-sales": "*",
+        "magento/module-quote": "*",
+        "magento/module-customer": "*",
+        "magento/module-payment": "*",
+        "magento/module-backend": "*",
+        "magento/module-directory": "*",
+        "magento/module-theme": "*",
+        "magento/module-catalog": "*",
+        "magento/framework": "*",
+        "magento/module-ui": "*",
         "lib-libxml": "*"
     },
     "suggest": {
-        "magento/module-checkout-agreements": "100.*"
+        "magento/module-checkout-agreements": "*"
     },
     "version": "3.0.6",
     "license": [
