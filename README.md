@@ -4,24 +4,9 @@
 - instrukcja instalacji w przygotowaniu
 
 ## 1. Instalacja
-Wtyczka może zostać zainstalowana na dwa możliwe sposoby:
+Wtyczka może zostać zainstalowana poprzez:
 
-a) przy użyciu narzędzia composer:
-  1. po przejściu do głównego katalogu Magento2 w pliku `composer.json` należy dodać następujący wpis:
-  
-    ```
-    "repositories": [{
-		"type": "vcs",
-		"url":  "https://github.com/dotpay/Magento2.git"
-    }]
-    ```
-  2. następnie w konsoli w tej samej lokalizacji trzeba wpisać komendę:
-  
-    ```
-    composer require dotpay/magento2 dev-master
-    ```
-
-b) kopiując pliki wtyczki do katalogu:
+a) skopiowanie plików do katalogu:
 ```
 app/code/Dotpay/Dotpay
 ```
@@ -43,24 +28,7 @@ a nastepnie przejść wszystkie kroki kreatora.
 ## 1. Installation
 Plugin can be installed in two ways:
 
-a) using composer:
-
-  1. when inside Magento2 root folder enter add this section to file `composer.json`:
-  
-    ```
-    "repositories": [{
-		"type": "vcs",
-		"url":  "https://github.com/dotpay/Magento2.git"
-    }]
-    ```
-    
-  2. next to execute the command in the same directory:
-  
-    ```
-    composer require dotpay/magento2 dev-master
-    ```
-
-b) copy plugin files to:
+a) copying plugin files to:
 ```
 app/code/Dotpay/Dotpay
 ```
