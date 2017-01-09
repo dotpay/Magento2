@@ -6,7 +6,12 @@
 ## 1. Instalacja
 Wtyczka może zostać zainstalowana poprzez:
 
-a) skopiowanie plików do katalogu:
+a) modman [link](https://github.com/colinmollenhour/modman):
+```
+modman clone https://github.com/dotpay/Magento2.git
+```
+
+b) skopiowanie plików do katalogu:
 ```
 app/code/Dotpay/Dotpay
 ```
@@ -28,7 +33,12 @@ a nastepnie przejść wszystkie kroki kreatora.
 ## 1. Installation
 Plugin can be installed in two ways:
 
-a) copying plugin files to:
+a) modman [link](https://github.com/colinmollenhour/modman):
+```
+modman clone https://github.com/dotpay/Magento2.git
+```
+
+b) copying plugin files to:
 ```
 app/code/Dotpay/Dotpay
 ```
