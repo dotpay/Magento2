@@ -1,0 +1,11 @@
+Block app/code/Dotpay/Dotpay/Block
+Controller app/code/Dotpay/Dotpay/Controller
+Model app/code/Dotpay/Dotpay/Model
+Observer app/code/Dotpay/Dotpay/Observer
+Setup app/code/Dotpay/Dotpay/Setup
+Tool app/code/Dotpay/Dotpay/Tool
+etc app/code/Dotpay/Dotpay/etc
+i18n app/code/Dotpay/Dotpay/i18n
+view app/code/Dotpay/Dotpay/view
+composer.json app/code/Dotpay/Dotpay/composer.json
+registration.php app/code/Dotpay/Dotpay/registration.php
