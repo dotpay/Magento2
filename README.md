@@ -1,7 +1,5 @@
 # Magento-2.0
 
-- wtyczka w fazie testów
-- instrukcja instalacji w przygotowaniu
 
 ## 1. Instalacja
 Wtyczka może zostać zainstalowana poprzez:
