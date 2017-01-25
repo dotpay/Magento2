@@ -224,12 +224,7 @@ abstract class Dotpay extends \Magento\Framework\App\Action\Action {
      * @return string
      */
     protected function getDotLang() {
-        $lang = strtolower(\Locale::getRegion($this->localeResolver->getLocale()));
-        switch($lang) {
-            case 'us':
-                $lang = 'en';
-                break;
-        }
+        $lang = strtolower(\Locale::getPrimaryLanguage($this->localeResolver->getLocale()));
         return $lang;
     }
     
